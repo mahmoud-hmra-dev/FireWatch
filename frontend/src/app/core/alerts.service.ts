@@ -17,6 +17,16 @@ export class AlertsService {
     );
   }
 
+  updateAlert(id: number, payload: FormData): Observable<Alert> {
+    return this.http.patch<ApiResource<Alert>>(`${API_BASE_URL}/alerts/${id}`, payload).pipe(
+      map((response) => response.data)
+    );
+  }
+
+  deleteAlert(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${API_BASE_URL}/alerts/${id}`);
+  }
+
   getUserAlerts(): Observable<Alert[]> {
     return this.http.get<ApiCollection<Alert>>(`${API_BASE_URL}/alerts/user`).pipe(
       map((response) => response.data)

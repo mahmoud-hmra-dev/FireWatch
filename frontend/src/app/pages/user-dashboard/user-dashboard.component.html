@@ -58,7 +58,7 @@
 <section class="grid two">
   <div class="card">
     <div class="card-head">
-      <h3>{{ 'alerts.form.title' | translate }}</h3>
+      <h3>{{ editingAlertId ? ('alerts.form.editTitle' | translate) : ('alerts.form.title' | translate) }}</h3>
       <button class="btn ghost" type="button" (click)="detectLocation()">
         {{ 'alerts.form.autoDetect' | translate }}
       </button>
@@ -68,6 +68,10 @@
         {{ 'alerts.form.photoEvidence' | translate }}
         <input type="file" (change)="onFileSelected($event)" />
       </label>
+      <div class="current-photo" *ngIf="editingAlertImageUrl">
+        <span class="hint">{{ 'alerts.form.currentPhoto' | translate }}</span>
+        <img [src]="editingAlertImageUrl" [alt]="'alerts.form.currentPhoto' | translate" />
+      </div>
       <label>
         {{ 'alerts.form.latitude' | translate }}
         <input type="text" formControlName="latitude" [placeholder]="'alerts.form.latitudePlaceholder' | translate" />
@@ -92,25 +96,42 @@
         </select>
       </label>
 
-      <button class="btn primary" type="submit" [disabled]="alertLoading">
-        {{ alertLoading ? ('alerts.form.submitting' | translate) : ('alerts.form.submit' | translate) }}
-      </button>
+      <div class="btn-row">
+        <button class="btn primary" type="submit" [disabled]="alertLoading">
+          {{
+            alertLoading
+              ? ('alerts.form.submitting' | translate)
+              : (editingAlertId ? ('alerts.form.update' | translate) : ('alerts.form.submit' | translate))
+          }}
+        </button>
+        <button class="btn ghost" type="button" *ngIf="editingAlertId" (click)="cancelEdit()">
+          {{ 'common.cancel' | translate }}
+        </button>
+      </div>
       <p class="hint" *ngIf="alertStatusKey">{{ alertStatusKey | translate }}</p>
     </form>
   </div>
 
   <div class="card">
     <div class="card-head">
-      <h3>{{ 'user.recentAlerts' | translate }}</h3>
-      <span class="pill">{{ 'user.recentAlerts.subtitle' | translate }}</span>
+      <h3>{{ 'user.reports.title' | translate }}</h3>
+      <span class="pill">{{ 'user.reports.subtitle' | translate }}</span>
     </div>
-    <div class="list" *ngIf="recentAlerts.length > 0; else noAlerts">
-      <div class="list-item" *ngFor="let alert of recentAlerts">
+    <div class="list" *ngIf="userAlerts.length > 0; else noAlerts">
+      <div class="list-item" *ngFor="let alert of userAlerts">
         <div>
-          <strong>{{ ('source.' + alert.source) | translate }}</strong>
+          <strong>{{ alert.area?.name || ('alerts.unassigned' | translate) }}</strong>
           <p>{{ alert.description || ('alerts.noDescription' | translate) }}</p>
+          <span class="tiny">{{ alert.created_at | date:'short' }}</span>
         </div>
-        <span class="tiny">{{ alert.created_at | date:'short' }}</span>
+        <div class="actions">
+          <button class="btn ghost" type="button" (click)="startEdit(alert)">
+            {{ 'actions.edit' | translate }}
+          </button>
+          <button class="btn ghost danger" type="button" (click)="deleteAlert(alert)">
+            {{ 'actions.delete' | translate }}
+          </button>
+        </div>
       </div>
     </div>
     <ng-template #noAlerts>

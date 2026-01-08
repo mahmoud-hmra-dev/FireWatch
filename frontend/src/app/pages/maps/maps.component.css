@@ -2,12 +2,79 @@
   margin-bottom: 1.5rem;
 }
 
-.map-panel iframe {
+.map-panel {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(4, 12, 6, 0.35);
+}
+
+.map-canvas {
   width: 100%;
   height: 360px;
-  border: none;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(4, 12, 6, 0.35);
+}
+
+.reports {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.reports-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reports-header h3 {
+  margin: 0;
+  font-family: var(--font-display);
+}
+
+.reports-count {
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 0.8rem;
+}
+
+.table {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 160px 180px 1fr 120px;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  background: rgba(16, 24, 19, 0.72);
+  align-items: center;
+}
+
+.table-row.header {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.photo-cell {
+  display: flex;
+  align-items: center;
+}
+
+.report-photo {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(4, 12, 6, 0.3);
+}
+
+.muted {
+  color: rgba(234, 241, 233, 0.7);
+  font-size: 0.9rem;
 }
 
 .area-grid {
@@ -21,9 +88,23 @@
   background: rgba(16, 24, 19, 0.72);
   padding: 1rem 1.25rem;
   border-radius: 18px;
+  border: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: var(--sand);
+  cursor: pointer;
+  text-align: left;
+}
+
+.area-card.selected {
+  outline: 1px solid rgba(57, 183, 91, 0.6);
+  box-shadow: 0 0 0 3px rgba(57, 183, 91, 0.12);
+}
+
+.area-card:focus-visible {
+  outline: 2px solid var(--leaf);
+  outline-offset: 2px;
 }
 
 .risk {
@@ -47,4 +128,16 @@
 .risk.high {
   background: rgba(217, 69, 69, 0.2);
   color: var(--fire);
+}
+
+@media (max-width: 900px) {
+  .reports-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .table-row {
+    grid-template-columns: 1fr;
+  }
 }

@@ -16,6 +16,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [UserController::class, 'profile']);
 
     Route::post('/alerts', [AlertController::class, 'store']);
+    Route::patch('/alerts/{alert}', [AlertController::class, 'update']);
+    Route::delete('/alerts/{alert}', [AlertController::class, 'destroy']);
     Route::get('/alerts/user', [AlertController::class, 'userAlerts']);
     Route::get('/areas', [AreaController::class, 'index']);
 });

@@ -154,6 +154,9 @@ export class AdminDashboardComponent implements OnInit {
       return;
     }
 
+    const latitudeValue = Number(this.alertForm.value.latitude);
+    const longitudeValue = Number(this.alertForm.value.longitude);
+
     this.alertLoading = true;
     this.alertStatusKey = '';
 
@@ -175,6 +178,9 @@ export class AdminDashboardComponent implements OnInit {
         this.alertStatusKey = 'alerts.status.success';
         this.alertForm.patchValue({ description: '' });
         this.selectedFile = null;
+        if (Number.isFinite(latitudeValue) && Number.isFinite(longitudeValue)) {
+          this.mapUrl = this.buildMapUrl(latitudeValue, longitudeValue);
+        }
         this.loadAlerts();
       },
       error: () => {

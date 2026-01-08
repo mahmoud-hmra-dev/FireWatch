@@ -6,15 +6,56 @@
 </section>
 
 <div class="map-panel">
-  <iframe [src]="mapUrl" [title]="'common.mapTitle' | translate"></iframe>
+  <div #mapCanvas class="map-canvas" [attr.aria-label]="'common.mapTitle' | translate"></div>
 </div>
 
+<section class="reports">
+  <div class="reports-header">
+    <h3>{{ 'maps.manualReports.title' | translate }}</h3>
+    <span class="reports-count">{{ 'maps.manualReports.count' | translate:{ count: manualAlerts.length } }}</span>
+  </div>
+
+  <div class="table" *ngIf="manualAlerts.length; else emptyReports">
+    <div class="table-row header">
+      <span>{{ 'table.time' | translate }}</span>
+      <span>{{ 'table.area' | translate }}</span>
+      <span>{{ 'table.description' | translate }}</span>
+      <span>{{ 'table.photo' | translate }}</span>
+    </div>
+    <div class="table-row" *ngFor="let alert of manualAlerts">
+      <span>{{ alert.created_at ? (alert.created_at | date:'short') : ('common.na' | translate) }}</span>
+      <span>{{ alert.area?.name || ('alerts.unassigned' | translate) }}</span>
+      <span>{{ alert.description || ('alerts.noDescription' | translate) }}</span>
+      <span class="photo-cell">
+        <img
+          *ngIf="alert.image_url; else noImage"
+          [src]="alert.image_url"
+          [alt]="'maps.manualReports.photoAlt' | translate"
+          class="report-photo"
+        />
+        <ng-template #noImage>
+          <span class="muted">{{ 'maps.manualReports.noImage' | translate }}</span>
+        </ng-template>
+      </span>
+    </div>
+  </div>
+  <ng-template #emptyReports>
+    <p class="muted">{{ 'maps.manualReports.empty' | translate }}</p>
+  </ng-template>
+</section>
+
 <div class="area-grid">
-  <div class="area-card" *ngFor="let area of areas">
+  <button
+    class="area-card"
+    type="button"
+    *ngFor="let area of areas"
+    (click)="focusArea(area)"
+    [class.selected]="selectedAreaId === area.id"
+  >
     <div>
       <strong>{{ area.name }}</strong>
       <p>{{ 'maps.pointsMapped' | translate:{ count: area.coordinates.length } }}</p>
     </div>
     <span [class]="riskClass(area.risk_level)">{{ ('risk.' + area.risk_level) | translate }}</span>
-  </div>
+  </button>
 </div>
