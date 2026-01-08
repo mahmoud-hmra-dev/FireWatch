@@ -1,0 +1,25 @@
+<section class="auth-card">
+  <div class="auth-header">
+    <h2>Welcome back</h2>
+    <p>Sign in to access FireWatch dashboards.</p>
+    <span class="hint" *ngIf="roleHint">{{ roleHint }}</span>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+    <label>
+      Email
+      <input type="email" formControlName="email" placeholder="name@example.com" />
+    </label>
+    <label>
+      Password
+      <input type="password" formControlName="password" placeholder="********" />
+    </label>
+
+    <button class="btn primary" type="submit" [disabled]="loading">{{ loading ? 'Signing in...' : 'Login' }}</button>
+    <p class="error" *ngIf="error">{{ error }}</p>
+  </form>
+
+  <p class="switch">
+    New here? <a routerLink="/register">Create an account</a>
+  </p>
+</section>

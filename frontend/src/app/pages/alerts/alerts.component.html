@@ -1,0 +1,37 @@
+<section class="page-header">
+  <div>
+    <h2>Auto-generated Alerts</h2>
+    <p>Review alerts triggered by high-risk conditions.</p>
+  </div>
+</section>
+
+<div class="filters" [formGroup]="filterForm">
+  <select formControlName="area_id">
+    <option value="">All Areas</option>
+    <option *ngFor="let alert of alerts" [value]="alert.area?.id">{{ alert.area?.name || 'Unassigned' }}</option>
+  </select>
+  <select formControlName="risk">
+    <option value="">All Risk Levels</option>
+    <option value="low">Low</option>
+    <option value="medium">Medium</option>
+    <option value="high">High</option>
+  </select>
+  <select formControlName="time">
+    <option value="all">All Time</option>
+    <option value="24h">Last 24 Hours</option>
+    <option value="7d">Last 7 Days</option>
+  </select>
+</div>
+
+<div class="alert-list">
+  <div class="alert-card" *ngFor="let alert of filteredAlerts">
+    <div>
+      <strong>{{ alert.area?.name || 'Unknown Area' }}</strong>
+      <p>{{ alert.description || 'Auto-generated alert' }}</p>
+    </div>
+    <div class="meta">
+      <span>{{ alert.area?.risk_level || 'n/a' }}</span>
+      <span>{{ alert.created_at | date:'short' }}</span>
+    </div>
+  </div>
+</div>

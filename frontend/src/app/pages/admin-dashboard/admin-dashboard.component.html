@@ -1,0 +1,206 @@
+<section class="page-header">
+  <div>
+    <h2>Admin Command Center</h2>
+    <p>Manage areas, alerts, and predictive monitoring.</p>
+  </div>
+  <button class="btn accent" (click)="togglePrediction()" [disabled]="predictionLoading">
+    {{ predictionEnabled ? 'Disable' : 'Enable' }} Prediction
+  </button>
+</section>
+
+<section class="grid two">
+  <div class="card">
+    <div class="card-head">
+      <h3>Prediction System</h3>
+      <span class="pill" [class.active]="predictionEnabled">{{ predictionEnabled ? 'ON' : 'OFF' }}</span>
+    </div>
+    <p>
+      When enabled, FireWatch auto-creates alerts for high-risk areas and notifies admins.
+    </p>
+    <button class="btn primary" (click)="togglePrediction()" [disabled]="predictionLoading">
+      {{ predictionEnabled ? 'Turn Off' : 'Turn On' }}
+    </button>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Area Overview Map</h3>
+      <span class="pill">Risk Levels</span>
+    </div>
+    <div class="map">
+      <iframe [src]="mapUrl" title="Area map"></iframe>
+    </div>
+    <div class="area-tags">
+      <span *ngFor="let area of areas" [class]="riskClass(area.risk_level)">{{ area.name }}</span>
+    </div>
+  </div>
+</section>
+
+<section class="grid two">
+  <div class="card">
+    <div class="card-head">
+      <h3>Area Snapshot</h3>
+      <span class="pill" *ngIf="selectedArea">{{ selectedArea.name }}</span>
+    </div>
+    <label>
+      Select Area
+      <select #areaSelect (change)="onAreaChange(areaSelect.value)" [value]="selectedArea?.id">
+        <option *ngFor="let area of areas" [value]="area.id">{{ area.name }}</option>
+      </select>
+    </label>
+    <div class="risk-row" *ngIf="selectedArea">
+      <span class="label">Risk Level</span>
+      <span [class]="riskClass(selectedArea.risk_level)">{{ selectedArea.risk_level | uppercase }}</span>
+    </div>
+    <div class="weather" *ngIf="selectedArea">
+      <div>
+        <span class="label">Temperature</span>
+        <strong>{{ selectedArea.weather.temperature ?? 'N/A' }} deg C</strong>
+      </div>
+      <div>
+        <span class="label">Humidity</span>
+        <strong>{{ selectedArea.weather.humidity ?? 'N/A' }}%</strong>
+      </div>
+      <div>
+        <span class="label">Wind</span>
+        <strong>{{ selectedArea.weather.wind_speed ?? 'N/A' }} km/h</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Submit a Manual Alert</h3>
+      <button class="btn ghost" type="button" (click)="detectLocation()">Auto-detect location</button>
+    </div>
+    <form [formGroup]="alertForm" (ngSubmit)="submitAlert()" class="form-grid">
+      <label>
+        Photo evidence
+        <input type="file" (change)="onFileSelected($event)" />
+      </label>
+      <label>
+        Latitude
+        <input type="text" formControlName="latitude" placeholder="e.g. 34.0500" />
+      </label>
+      <label>
+        Longitude
+        <input type="text" formControlName="longitude" placeholder="e.g. -118.2500" />
+      </label>
+      <label>
+        Description (optional)
+        <textarea formControlName="description" rows="3" placeholder="Smoke sighting near trailhead..."></textarea>
+      </label>
+      <label>
+        Related Area (optional)
+        <select formControlName="area_id">
+          <option value="">None</option>
+          <option *ngFor="let area of areas" [value]="area.id">{{ area.name }}</option>
+        </select>
+      </label>
+
+      <button class="btn primary" type="submit" [disabled]="alertLoading">{{ alertLoading ? 'Submitting...' : 'Send Alert' }}</button>
+      <p class="hint" *ngIf="alertStatus">{{ alertStatus }}</p>
+    </form>
+  </div>
+</section>
+
+<section class="grid two">
+  <div class="card">
+    <div class="card-head">
+      <h3>{{ editingAreaId ? 'Edit Area' : 'Add New Area' }}</h3>
+    </div>
+    <form [formGroup]="areaForm" (ngSubmit)="saveArea()" class="form-grid">
+      <label>
+        Name
+        <input type="text" formControlName="name" placeholder="Northern Ridge" />
+      </label>
+      <label>
+        Risk Level
+        <select formControlName="risk_level">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </label>
+      <label>
+        Coordinates (JSON Array)
+        <textarea formControlName="coordinates" rows="5" placeholder='[{"lat": 34.1, "lng": -118.2}, {"lat": 34.2, "lng": -118.3}, {"lat": 34.15, "lng": -118.4}]'></textarea>
+      </label>
+      <label>
+        Temperature (deg C)
+        <input type="number" formControlName="temperature" />
+      </label>
+      <label>
+        Humidity (%)
+        <input type="number" formControlName="humidity" />
+      </label>
+      <label>
+        Wind Speed (km/h)
+        <input type="number" formControlName="wind_speed" />
+      </label>
+
+      <div class="btn-row">
+        <button class="btn primary" type="submit">{{ editingAreaId ? 'Save Changes' : 'Create Area' }}</button>
+        <button class="btn ghost" type="button" *ngIf="editingAreaId" (click)="cancelEdit()">Cancel</button>
+      </div>
+      <p class="hint" *ngIf="statusMessage">{{ statusMessage }}</p>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Areas</h3>
+      <span class="pill">{{ areas.length }} total</span>
+    </div>
+    <div class="list">
+      <div class="list-item" *ngFor="let area of areas">
+        <div>
+          <strong>{{ area.name }}</strong>
+          <p>{{ area.risk_level | uppercase }} risk</p>
+        </div>
+        <div class="actions">
+          <button class="btn ghost" type="button" (click)="startEdit(area)">Edit</button>
+          <button class="btn ghost" type="button" (click)="deleteArea(area)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-head">
+    <h3>Alert History</h3>
+    <span class="pill">{{ filteredAlerts.length }} alerts</span>
+  </div>
+  <div class="filters" [formGroup]="filterForm">
+    <input type="text" placeholder="Search description" formControlName="search" />
+    <select formControlName="source">
+      <option value="">All Sources</option>
+      <option value="manual">Manual</option>
+      <option value="auto">Auto</option>
+    </select>
+    <select formControlName="area_id">
+      <option value="">All Areas</option>
+      <option *ngFor="let area of areas" [value]="area.id">{{ area.name }}</option>
+    </select>
+    <select formControlName="time">
+      <option value="all">All Time</option>
+      <option value="24h">Last 24 Hours</option>
+      <option value="7d">Last 7 Days</option>
+    </select>
+  </div>
+  <div class="table">
+    <div class="table-row header">
+      <span>Source</span>
+      <span>Description</span>
+      <span>Area</span>
+      <span>Time</span>
+    </div>
+    <div class="table-row" *ngFor="let alert of filteredAlerts">
+      <span>{{ alert.source }}</span>
+      <span>{{ alert.description || 'No description' }}</span>
+      <span>{{ alert.area?.name || 'Unassigned' }}</span>
+      <span>{{ alert.created_at | date:'short' }}</span>
+    </div>
+  </div>
+</section>

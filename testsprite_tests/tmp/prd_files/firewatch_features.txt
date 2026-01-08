@@ -1,0 +1,53 @@
+
+FireWatch Application - Feature List
+
+1. Authentication System
+- Register/Login for users and admins
+- Role-based access control
+
+2. User Dashboard
+- View fire risk level (Low / Medium / High)
+- View current weather data (temperature, humidity)
+- Interactive map showing current location
+- Submit manual fire alert (image + GPS location)
+
+3. Admin Dashboard
+- View all user features
+- Access alert history (manual + automatic alerts)
+- Add/Edit/Delete monitored areas
+- Enable or disable fire prediction system
+
+4. Areas Management
+- CRUD operations on forest areas
+- Assign risk levels to each area
+- Visualize areas on map with color coding
+
+5. Fire Alert System
+- Manual alerts from users
+- Automatic alerts based on prediction system
+- Admin notifications for high-risk situations
+
+6. Weather Monitoring
+- Display weather data per area
+- Optional integration with external weather APIs
+
+7. Map Visualization
+- Color-coded risk zones on map (green, orange, red)
+- Clickable areas with details
+
+8. Data Analysis Page
+- Charts/tables of humidity, temperature, and risk levels
+- Trends and risk predictions per region
+
+9. Alert Notifications
+- Real-time or scheduled notifications
+- Push alerts for admins and users
+
+10. Mobile App Features (Flutter)
+- Login/Register
+- View dashboard and risk info
+- Submit fire alert (image + location)
+- View system and personal alerts
+- Map with GPS support
+
+This application is designed for forest fire prevention, monitoring, and emergency alerting to protect people and nature.

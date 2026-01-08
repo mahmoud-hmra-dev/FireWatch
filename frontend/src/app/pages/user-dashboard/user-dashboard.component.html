@@ -1,0 +1,112 @@
+<section class="page-header">
+  <div>
+    <h2>User Dashboard</h2>
+    <p>Monitor your local area and report incidents fast.</p>
+  </div>
+</section>
+
+<section class="grid two">
+  <div class="card">
+    <div class="card-head">
+      <h3>Area Snapshot</h3>
+      <span class="pill" *ngIf="selectedArea">{{ selectedArea.name }}</span>
+    </div>
+
+    <div *ngIf="areasError" class="alert warning">{{ areasError }}</div>
+
+    <div *ngIf="!areasError">
+      <label>
+        Select Area
+        <select #areaSelect (change)="onAreaChange(areaSelect.value)" [value]="selectedArea?.id">
+          <option *ngFor="let area of areas" [value]="area.id">{{ area.name }}</option>
+        </select>
+      </label>
+
+      <div class="risk-row" *ngIf="selectedArea">
+        <span class="label">Risk Level</span>
+        <span [class]="riskClass(selectedArea.risk_level)">{{ selectedArea.risk_level | uppercase }}</span>
+      </div>
+
+      <div class="weather" *ngIf="selectedArea">
+        <div>
+          <span class="label">Temperature</span>
+          <strong>{{ selectedArea.weather.temperature ?? 'N/A' }} deg C</strong>
+        </div>
+        <div>
+          <span class="label">Humidity</span>
+          <strong>{{ selectedArea.weather.humidity ?? 'N/A' }}%</strong>
+        </div>
+        <div>
+          <span class="label">Wind</span>
+          <strong>{{ selectedArea.weather.wind_speed ?? 'N/A' }} km/h</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Live Map</h3>
+      <span class="pill">OpenStreetMap</span>
+    </div>
+    <div class="map">
+      <iframe [src]="mapUrl" title="Area map"></iframe>
+    </div>
+  </div>
+</section>
+
+<section class="grid two">
+  <div class="card">
+    <div class="card-head">
+      <h3>Submit a Manual Alert</h3>
+      <button class="btn ghost" type="button" (click)="detectLocation()">Auto-detect location</button>
+    </div>
+    <form [formGroup]="alertForm" (ngSubmit)="submitAlert()" class="form-grid">
+      <label>
+        Photo evidence
+        <input type="file" (change)="onFileSelected($event)" />
+      </label>
+      <label>
+        Latitude
+        <input type="text" formControlName="latitude" placeholder="e.g. 34.0500" />
+      </label>
+      <label>
+        Longitude
+        <input type="text" formControlName="longitude" placeholder="e.g. -118.2500" />
+      </label>
+      <label>
+        Description (optional)
+        <textarea formControlName="description" rows="3" placeholder="Smoke sighting near trailhead..."></textarea>
+      </label>
+      <label>
+        Related Area (optional)
+        <select formControlName="area_id">
+          <option value="">None</option>
+          <option *ngFor="let area of areas" [value]="area.id">{{ area.name }}</option>
+        </select>
+      </label>
+
+      <button class="btn primary" type="submit" [disabled]="alertLoading">{{ alertLoading ? 'Submitting...' : 'Send Alert' }}</button>
+      <p class="hint" *ngIf="alertStatus">{{ alertStatus }}</p>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Recent Alerts</h3>
+      <span class="pill">Your activity</span>
+    </div>
+    <div class="list" *ngIf="recentAlerts.length > 0; else noAlerts">
+      <div class="list-item" *ngFor="let alert of recentAlerts">
+        <div>
+          <strong>{{ alert.source | uppercase }}</strong>
+          <p>{{ alert.description || 'No description' }}</p>
+        </div>
+        <span class="tiny">{{ alert.created_at | date:'short' }}</span>
+      </div>
+    </div>
+    <ng-template #noAlerts>
+      <p class="hint">No alerts submitted yet.</p>
+    </ng-template>
+  </div>
+</section>

@@ -1,0 +1,50 @@
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.map-panel iframe {
+  width: 100%;
+  height: 360px;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(4, 12, 6, 0.35);
+}
+
+.area-grid {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.area-card {
+  background: rgba(16, 24, 19, 0.72);
+  padding: 1rem 1.25rem;
+  border-radius: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.risk {
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.risk.low {
+  background: rgba(56, 182, 91, 0.2);
+  color: var(--leaf);
+}
+
+.risk.medium {
+  background: rgba(245, 166, 35, 0.2);
+  color: var(--ember);
+}
+
+.risk.high {
+  background: rgba(217, 69, 69, 0.2);
+  color: var(--fire);
+}

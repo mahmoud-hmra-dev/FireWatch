@@ -1,0 +1,18 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:4200",
+  "loginUser": "admin@firewatch.test",
+  "loginPassword": "password",
+  "executionArgs": {
+    "projectName": "FireWatch",
+    "projectPath": "C:\\Users\\mahmo\\Desktop\\FireWatch",
+    "testIds": [],
+    "additionalInstruction": "",
+    "envs": {
+      "API_KEY": "sk-user-ezgISTdAaP4BcWl1V0apGDuLGLNzJ2vxxF9hR3O8hkmSrNLEvSB-oc3aHR1L6Yc1nOssU4B0cY4YS9WtwKIn2Nu3eHFU_nQl6ZXKdZCGgQwbpDn1dTv4qt1AG8QiihO53m4"
+    }
+  },
+  "proxy": "http://a7725f3a-fe63-4aa9-9d69-79c96c07dcad:NWGldUEa7dBdVeP2wF7OdgHywpVgvJ87@tun.testsprite.com:8080"
+}

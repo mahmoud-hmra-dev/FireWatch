@@ -1,0 +1,20 @@
+<section class="page-header">
+  <div>
+    <h2>Maps</h2>
+    <p>See every monitored area and its current fire risk.</p>
+  </div>
+</section>
+
+<div class="map-panel">
+  <iframe [src]="mapUrl" title="Area map"></iframe>
+</div>
+
+<div class="area-grid">
+  <div class="area-card" *ngFor="let area of areas">
+    <div>
+      <strong>{{ area.name }}</strong>
+      <p>{{ area.coordinates.length }} points mapped</p>
+    </div>
+    <span [class]="riskClass(area.risk_level)">{{ area.risk_level }}</span>
+  </div>
+</div>

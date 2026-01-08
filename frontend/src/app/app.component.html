@@ -1,0 +1,31 @@
+<div class="app-shell">
+  <header class="top-nav">
+    <div class="brand" routerLink="/">FireWatch</div>
+    <nav class="nav-links">
+      <a routerLink="/">Home</a>
+      <a routerLink="/maps" *ngIf="isAuthenticated">Maps</a>
+      <a routerLink="/analysis" *ngIf="isAdmin">Data</a>
+      <a routerLink="/alerts" *ngIf="isAdmin">Alerts</a>
+      <a routerLink="/dashboard" *ngIf="isUser">Dashboard</a>
+      <a routerLink="/admin" *ngIf="isAdmin">Admin</a>
+    </nav>
+    <div class="nav-actions">
+      <ng-container *ngIf="isAuthenticated; else guestLinks">
+        <span class="chip">{{ user?.name }}</span>
+        <button class="btn ghost" type="button" (click)="logout()">Logout</button>
+      </ng-container>
+      <ng-template #guestLinks>
+        <a class="btn ghost" routerLink="/login">Login</a>
+        <a class="btn primary" routerLink="/register">Create Account</a>
+      </ng-template>
+    </div>
+  </header>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="footer">
+    <span>FireWatch - Forest fire monitoring and response.</span>
+  </footer>
+</div>

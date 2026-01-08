@@ -1,0 +1,52 @@
+[
+  {
+    "id": "TC001",
+    "title": "user_registration_functionality",
+    "description": "Verify that users can successfully register with valid data and receive appropriate confirmation or error messages for invalid inputs."
+  },
+  {
+    "id": "TC002",
+    "title": "user_login_and_authentication",
+    "description": "Test user login with valid and invalid credentials, ensuring secure authentication and correct role assignment."
+  },
+  {
+    "id": "TC003",
+    "title": "user_logout_process",
+    "description": "Ensure that authenticated users can log out successfully and that their session is invalidated."
+  },
+  {
+    "id": "TC004",
+    "title": "submit_manual_fire_alert",
+    "description": "Validate that users can submit manual fire alerts with geo-tagging and images, and that alerts are stored and retrievable."
+  },
+  {
+    "id": "TC005",
+    "title": "view_user_own_alerts",
+    "description": "Check that users can view only their own submitted alerts and that data privacy is maintained."
+  },
+  {
+    "id": "TC006",
+    "title": "admin_view_all_alerts",
+    "description": "Verify that admins can view all fire alerts submitted by any user with correct data visibility."
+  },
+  {
+    "id": "TC007",
+    "title": "admin_manage_forest_areas_crud",
+    "description": "Test that admins can create, update, and delete forest areas, assign risk levels, and changes reflect correctly on the map."
+  },
+  {
+    "id": "TC008",
+    "title": "admin_update_weather_data_for_area",
+    "description": "Ensure admins can update weather data for specific forest areas and that updates are accurately displayed."
+  },
+  {
+    "id": "TC009",
+    "title": "admin_fire_prediction_settings_toggle",
+    "description": "Validate that admins can view and toggle fire prediction settings and that automatic alerts respond accordingly."
+  },
+  {
+    "id": "TC010",
+    "title": "role_based_access_control_enforcement",
+    "description": "Confirm that all API endpoints enforce authentication and role-based authorization consistently for users and admins."
+  }
+]

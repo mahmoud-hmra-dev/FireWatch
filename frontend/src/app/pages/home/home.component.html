@@ -1,0 +1,62 @@
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">FireWatch</p>
+    <h1>Monitor forest fire risk in real time.</h1>
+    <p class="lede">
+      FireWatch unifies citizen reports, area risk intelligence, and live weather to
+      keep teams ahead of fast-moving wildfires.
+    </p>
+    <div class="btn-row">
+      <a class="btn primary" [routerLink]="['/login']" [queryParams]="{ role: 'user' }">Login as User</a>
+      <a class="btn accent" [routerLink]="['/login']" [queryParams]="{ role: 'admin' }">Login as Admin</a>
+      <a class="btn ghost" routerLink="/register">Create Account</a>
+    </div>
+  </div>
+  <div class="hero-card">
+    <div class="stat">
+      <span class="label">Active Watch Zones</span>
+      <span class="value">24</span>
+    </div>
+    <div class="stat">
+      <span class="label">High Risk Alerts</span>
+      <span class="value danger">7</span>
+    </div>
+    <div class="stat">
+      <span class="label">Avg. Response</span>
+      <span class="value">12 min</span>
+    </div>
+    <p class="card-note">Live metrics appear here after you connect to the API.</p>
+  </div>
+</section>
+
+<section class="info-grid">
+  <div class="info-card">
+    <h3>Community-Driven Alerts</h3>
+    <p>Citizens can submit geo-tagged fire reports with photos in seconds.</p>
+  </div>
+  <div class="info-card">
+    <h3>Risk Intelligence</h3>
+    <p>Areas are scored as low, medium, or high using real-time weather updates.</p>
+  </div>
+  <div class="info-card">
+    <h3>Decision Support</h3>
+    <p>Admins can track alerts, manage zones, and toggle prediction workflows.</p>
+  </div>
+</section>
+
+<section class="highlight">
+  <div>
+    <h2>How FireWatch Works</h2>
+    <p>
+      Areas are mapped as polygons with live weather, alert history, and predictive
+      triggers. When the prediction system is enabled, high-risk zones can
+      automatically notify admins.
+    </p>
+  </div>
+  <div class="highlight-box">
+    <div class="chip">Sanctum Auth</div>
+    <div class="chip">Role Guarded</div>
+    <div class="chip">Live Alerts</div>
+    <div class="chip">OSM Maps</div>
+  </div>
+</section>

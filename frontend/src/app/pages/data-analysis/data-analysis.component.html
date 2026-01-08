@@ -1,0 +1,23 @@
+<section class="page-header">
+  <div>
+    <h2>Data Analysis</h2>
+    <p>Compare weather and risk signals for each area.</p>
+  </div>
+</section>
+
+<div class="table">
+  <div class="table-row header">
+    <span>Area</span>
+    <span>Temperature</span>
+    <span>Humidity</span>
+    <span>Wind</span>
+    <span>Risk</span>
+  </div>
+  <div class="table-row" *ngFor="let area of areas">
+    <span>{{ area.name }}</span>
+    <span>{{ area.weather.temperature ?? 'N/A' }} deg C</span>
+    <span>{{ area.weather.humidity ?? 'N/A' }}%</span>
+    <span>{{ area.weather.wind_speed ?? 'N/A' }} km/h</span>
+    <span [class]="riskClass(area.risk_level)">{{ area.risk_level }}</span>
+  </div>
+</div>

@@ -1,0 +1,139 @@
+{
+  "tech_stack": [
+    "PHP",
+    "Laravel 12",
+    "Angular 17",
+    "TypeScript",
+    "MySQL",
+    "SQLite",
+    "Laravel Sanctum",
+    "Docker",
+    "Apache",
+    "Nginx"
+  ],
+  "features": [
+    {
+      "name": "User Authentication",
+      "description": "User registration, login, logout, and profile management with role-based access control",
+      "files": [
+        "backend/app/Http/Controllers/Api/AuthController.php",
+        "backend/app/Http/Requests/LoginRequest.php",
+        "backend/app/Http/Requests/RegisterRequest.php",
+        "backend/app/Http/Resources/AuthResource.php",
+        "backend/app/Models/User.php",
+        "frontend/src/app/pages/login/login.component.ts",
+        "frontend/src/app/pages/register/register.component.ts",
+        "frontend/src/app/core/auth.service.ts",
+        "frontend/src/app/core/auth.guard.ts",
+        "frontend/src/app/core/auth.interceptor.ts"
+      ]
+    },
+    {
+      "name": "Role-Based Access Control",
+      "description": "Role-based authorization middleware and guards for admin and user roles",
+      "files": [
+        "backend/app/Http/Middleware/RoleMiddleware.php",
+        "backend/routes/api.php",
+        "frontend/src/app/core/role.guard.ts",
+        "frontend/src/app/app-routing.module.ts"
+      ]
+    },
+    {
+      "name": "Fire Alert Management",
+      "description": "Create, view, and manage fire alerts with image upload and GPS coordinates",
+      "files": [
+        "backend/app/Http/Controllers/Api/AlertController.php",
+        "backend/app/Http/Requests/AlertStoreRequest.php",
+        "backend/app/Http/Resources/AlertResource.php",
+        "backend/app/Models/Alert.php",
+        "backend/app/Notifications/AdminAlertNotification.php",
+        "frontend/src/app/pages/alerts/alerts.component.ts",
+        "frontend/src/app/core/alerts.service.ts"
+      ]
+    },
+    {
+      "name": "Forest Area Management",
+      "description": "CRUD operations for forest areas with risk levels, weather data, and coordinates",
+      "files": [
+        "backend/app/Http/Controllers/Api/AreaController.php",
+        "backend/app/Http/Controllers/Api/AreaWeatherController.php",
+        "backend/app/Http/Requests/AreaStoreRequest.php",
+        "backend/app/Http/Requests/AreaUpdateRequest.php",
+        "backend/app/Http/Resources/AreaResource.php",
+        "backend/app/Models/Area.php",
+        "frontend/src/app/core/areas.service.ts"
+      ]
+    },
+    {
+      "name": "Fire Prediction System",
+      "description": "Toggle fire prediction settings and automatic alert generation based on risk levels",
+      "files": [
+        "backend/app/Http/Controllers/Api/FirePredictionController.php",
+        "backend/app/Http/Requests/PredictionToggleRequest.php",
+        "backend/app/Http/Resources/PredictionStatusResource.php",
+        "backend/app/Models/FirePredictionSetting.php",
+        "frontend/src/app/core/prediction.service.ts"
+      ]
+    },
+    {
+      "name": "User Dashboard",
+      "description": "User dashboard displaying personal alerts, fire risk information, and weather data",
+      "files": [
+        "frontend/src/app/pages/user-dashboard/user-dashboard.component.ts",
+        "frontend/src/app/pages/user-dashboard/user-dashboard.component.html",
+        "frontend/src/app/pages/user-dashboard/user-dashboard.component.css"
+      ]
+    },
+    {
+      "name": "Admin Dashboard",
+      "description": "Admin dashboard for managing areas, alerts, weather data, and prediction settings",
+      "files": [
+        "frontend/src/app/pages/admin-dashboard/admin-dashboard.component.ts",
+        "frontend/src/app/pages/admin-dashboard/admin-dashboard.component.html",
+        "frontend/src/app/pages/admin-dashboard/admin-dashboard.component.css"
+      ]
+    },
+    {
+      "name": "Interactive Maps",
+      "description": "Map visualization showing forest areas with risk levels and fire alerts with GPS coordinates",
+      "files": [
+        "frontend/src/app/pages/maps/maps.component.ts",
+        "frontend/src/app/pages/maps/maps.component.html",
+        "frontend/src/app/pages/maps/maps.component.css"
+      ]
+    },
+    {
+      "name": "Data Analysis",
+      "description": "Data analysis page displaying charts and trends for weather data and risk levels",
+      "files": [
+        "frontend/src/app/pages/data-analysis/data-analysis.component.ts",
+        "frontend/src/app/pages/data-analysis/data-analysis.component.html",
+        "frontend/src/app/pages/data-analysis/data-analysis.component.css"
+      ]
+    },
+    {
+      "name": "API Configuration",
+      "description": "API base URL configuration and HTTP client setup",
+      "files": [
+        "frontend/src/app/core/api.config.ts",
+        "frontend/src/environments/environment.ts"
+      ]
+    },
+    {
+      "name": "User Profile",
+      "description": "User profile endpoint to retrieve authenticated user information",
+      "files": [
+        "backend/app/Http/Controllers/Api/UserController.php",
+        "backend/routes/api.php"
+      ]
+    },
+    {
+      "name": "Notification System",
+      "description": "Notification system for alerting admins about fire alerts and risk changes",
+      "files": [
+        "backend/app/Notifications/AdminAlertNotification.php",
+        "backend/database/migrations/2026_01_07_231148_create_notifications_table.php"
+      ]
+    }
+  ]
+}

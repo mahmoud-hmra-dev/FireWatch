@@ -1,0 +1,54 @@
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.table {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 1.2fr repeat(3, 1fr) 120px;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  background: rgba(16, 24, 19, 0.72);
+}
+
+.table-row.header {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.risk {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.risk.low {
+  background: rgba(56, 182, 91, 0.2);
+  color: var(--leaf);
+}
+
+.risk.medium {
+  background: rgba(245, 166, 35, 0.2);
+  color: var(--ember);
+}
+
+.risk.high {
+  background: rgba(217, 69, 69, 0.2);
+  color: var(--fire);
+}
+
+@media (max-width: 900px) {
+  .table-row {
+    grid-template-columns: 1fr;
+  }
+}

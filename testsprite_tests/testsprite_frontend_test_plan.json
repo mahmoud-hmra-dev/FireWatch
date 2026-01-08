@@ -1,0 +1,542 @@
+[
+  {
+    "id": "TC001",
+    "title": "User Registration Success",
+    "description": "Verify that a new user can successfully register with valid email, password and required details.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the registration page."
+      },
+      {
+        "type": "action",
+        "description": "Input valid email, password, and required user details."
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the registration completes successfully and user receives confirmation."
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "User Registration with Existing Email",
+    "description": "Verify registration fails when using an email already registered in the system.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the registration page."
+      },
+      {
+        "type": "action",
+        "description": "Enter an email address that already exists in the database."
+      },
+      {
+        "type": "action",
+        "description": "Fill other required details and submit the form."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the registration fails with an appropriate error message about email uniqueness."
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "User Login Success",
+    "description": "Verify existing users can login successfully using valid email and password.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page."
+      },
+      {
+        "type": "action",
+        "description": "Enter valid registered email and password."
+      },
+      {
+        "type": "action",
+        "description": "Click on login button."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user is logged in and redirected to their dashboard."
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "User Login Failure with Incorrect Password",
+    "description": "Verify login is denied when user inputs an incorrect password.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page."
+      },
+      {
+        "type": "action",
+        "description": "Enter valid email but incorrect password."
+      },
+      {
+        "type": "action",
+        "description": "Click login button."
+      },
+      {
+        "type": "assertion",
+        "description": "Login should fail and an appropriate error message should be shown."
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Role-Based Access Control Enforcement",
+    "description": "Verify that access to admin-only resources is denied to regular users and allowed to admins.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as a regular user."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to access admin-only API endpoints and admin dashboard."
+      },
+      {
+        "type": "assertion",
+        "description": "Access should be denied with correct error messages or redirects."
+      },
+      {
+        "type": "action",
+        "description": "Logout and login as admin user."
+      },
+      {
+        "type": "action",
+        "description": "Access admin dashboard and admin-only endpoints."
+      },
+      {
+        "type": "assertion",
+        "description": "Access should be permitted with full functionality."
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "User Fire Alert Submission with Image and GPS",
+    "description": "Verify that users can submit manual fire alerts including image attachments and GPS location data.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as a regular user and navigate to alert submission page."
+      },
+      {
+        "type": "action",
+        "description": "Fill alert form with valid fire incident details, upload an image, and set GPS location."
+      },
+      {
+        "type": "action",
+        "description": "Submit the alert."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify alert is created, saved in database, and appears in user's alert list."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the uploaded image is correctly stored and displayed."
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "User Views Own Alerts",
+    "description": "Verify users can view their own submitted fire alerts correctly.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as a user with existing alerts."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to alerts page or dashboard alert list."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that only the user's own alerts are shown with correct details."
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Admin Views All Alerts",
+    "description": "Verify that admin users can view all alerts submitted by any users.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as an admin."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to admin alerts management page."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all alerts from all users are visible with correct details."
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Admin CRUD Operations on Forest Areas",
+    "description": "Validate create, update, and delete operations on forest areas are functional for admins.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as admin and navigate to forest area management page."
+      },
+      {
+        "type": "action",
+        "description": "Create a new forest area with necessary details and assign a risk level."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify new area is saved and visible on the map with correct color coding."
+      },
+      {
+        "type": "action",
+        "description": "Update the risk level and details of the created area."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify updates are saved and map color reflects new risk level."
+      },
+      {
+        "type": "action",
+        "description": "Delete the created forest area."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the area is removed from list and map."
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Map Visualization Accuracy",
+    "description": "Verify interactive maps display forest areas and fire alerts with accurate locations and correct risk color coding.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as user and view map."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all forest areas are shown with correct geographic locations."
+      },
+      {
+        "type": "assertion",
+        "description": "Check color codes of each area correspond to their assigned risk levels (green, orange, red)."
+      },
+      {
+        "type": "action",
+        "description": "Click on a forest area."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify detailed information about the area is displayed correctly."
+      },
+      {
+        "type": "action",
+        "description": "Verify fire alerts appear on map at correct GPS coordinates."
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Admin Updates Weather Data per Area",
+    "description": "Verify admins can update weather information for specific forest areas and changes reflect on dashboards.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as admin and navigate to area weather update section."
+      },
+      {
+        "type": "action",
+        "description": "Select an existing forest area and update weather parameters such as temperature and humidity."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify updates are saved to database."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify updated weather data is reflected on admin and user dashboards."
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Fire Prediction System Toggle and Alert Generation",
+    "description": "Verify admin can toggle fire prediction workflow and automatic alerts generate accordingly.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as admin and navigate to fire prediction settings page."
+      },
+      {
+        "type": "action",
+        "description": "Enable the fire prediction system."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the system generates automatic fire alerts based on predictions."
+      },
+      {
+        "type": "action",
+        "description": "Disable the fire prediction system."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify automatic alerts stop generating while manual alerts remain functional."
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Notification Delivery for Alerts and Risk Changes",
+    "description": "Verify that both users and admins receive real-time or scheduled notifications for fire alerts and risk level changes.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Trigger a manual fire alert as a user or an automatic alert via prediction system."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify users and admins subscribed to the alert area receive notifications promptly."
+      },
+      {
+        "type": "action",
+        "description": "Change the risk level of a forest area as admin."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that notifications about risk level changes are delivered accordingly."
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Data Analysis Page Accuracy",
+    "description": "Verify data analysis tools display accurate charts and tables for humidity, temperature, risk levels and trends.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as admin and navigate to data analysis page."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify historical data for weather and risk levels are correctly represented in charts."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify trends over time are calculated and displayed accurately."
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Mobile App Core Functionality Testing",
+    "description": "Verify mobile app allows login, dashboard viewing, fire alert submission with images and GPS, and map interaction correctly.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Install and launch the mobile app."
+      },
+      {
+        "type": "action",
+        "description": "Login with valid user credentials."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify successful login and dashboard loads with fire risk and weather data."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to map view and verify GPS-enabled location is shown."
+      },
+      {
+        "type": "action",
+        "description": "Submit a fire alert including an image and current GPS coordinates."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify alert submission succeeds and alert is visible in user's alert list."
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "API Authentication and Authorization Enforcement",
+    "description": "Verify all API endpoints enforce authentication and role-based authorization as per access definition.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt to access authenticated API endpoints without logging in."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is denied with appropriate error messages."
+      },
+      {
+        "type": "action",
+        "description": "Login as regular user and attempt to access admin-only API endpoints."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is denied."
+      },
+      {
+        "type": "action",
+        "description": "Login as admin and access all endpoints."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is granted and operations function correctly."
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Logout Functionality",
+    "description": "Verify that users can log out successfully and are prevented from accessing authenticated resources post logout.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as a user."
+      },
+      {
+        "type": "action",
+        "description": "Perform logout operation."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user session is terminated and redirected to login page."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to access a protected resource after logout."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is denied and user is prompted to login again."
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "Invalid Fire Alert Submission Handling",
+    "description": "Verify system handles invalid or incomplete manual fire alert submissions gracefully with relevant error messages.",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as user and navigate to alert submission."
+      },
+      {
+        "type": "action",
+        "description": "Submit alert form missing mandatory fields such as GPS location or image."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify submission is rejected with clear validation error messages."
+      }
+    ]
+  },
+  {
+    "id": "TC019",
+    "title": "Map Interaction Responsiveness and Detail Display",
+    "description": "Verify that clicking on map areas or alerts reveals detailed information promptly and UI remains responsive.",
+    "category": "ui",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as user and open map view."
+      },
+      {
+        "type": "action",
+        "description": "Click multiple distinct forest areas and fire alerts on the map."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify detailed info panels pop up or are displayed for each selected item."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the UI remains responsive with no lag or freezing on repeated interactions."
+      }
+    ]
+  },
+  {
+    "id": "TC020",
+    "title": "Scheduled Notifications Functionality",
+    "description": "Verify scheduled notifications are sent as expected at predefined intervals to users and admins according to settings.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Configure scheduled notification settings as admin."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify notifications are sent at the scheduled times to targeted users and admins."
+      },
+      {
+        "type": "action",
+        "description": "Disable scheduled notifications."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify notifications cease as per the updated settings."
+      }
+    ]
+  }
+]

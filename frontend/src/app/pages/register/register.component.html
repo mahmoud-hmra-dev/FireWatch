@@ -1,0 +1,32 @@
+<section class="auth-card">
+  <div class="auth-header">
+    <h2>Create your account</h2>
+    <p>Get real-time alerts and area insights.</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+    <label>
+      Name
+      <input type="text" formControlName="name" placeholder="Your name" />
+    </label>
+    <label>
+      Email
+      <input type="email" formControlName="email" placeholder="name@example.com" />
+    </label>
+    <label>
+      Password
+      <input type="password" formControlName="password" placeholder="Minimum 8 characters" />
+    </label>
+    <label>
+      Confirm Password
+      <input type="password" formControlName="password_confirmation" placeholder="Repeat password" />
+    </label>
+
+    <button class="btn primary" type="submit" [disabled]="loading">{{ loading ? 'Creating...' : 'Create Account' }}</button>
+    <p class="error" *ngIf="error">{{ error }}</p>
+  </form>
+
+  <p class="switch">
+    Already have an account? <a routerLink="/login">Sign in</a>
+  </p>
+</section>
