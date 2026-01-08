@@ -5,6 +5,7 @@ import { AlertsService } from '../../core/alerts.service';
 import { AreasService } from '../../core/areas.service';
 import { PredictionService } from '../../core/prediction.service';
 import { Alert, Area, AreaCoordinate } from '../../core/models';
+import { I18nService } from '../../core/i18n.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -17,10 +18,10 @@ export class AdminDashboardComponent implements OnInit {
   filteredAlerts: Alert[] = [];
   predictionEnabled = false;
   predictionLoading = false;
-  statusMessage = '';
+  statusMessageKey = '';
   selectedArea: Area | null = null;
   mapUrl: SafeResourceUrl;
-  alertStatus = '';
+  alertStatusKey = '';
   alertLoading = false;
   selectedFile: File | null = null;
 
@@ -54,7 +55,8 @@ export class AdminDashboardComponent implements OnInit {
     private alertsService: AlertsService,
     private areasService: AreasService,
     private predictionService: PredictionService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private i18n: I18nService
   ) {
     this.mapUrl = this.buildMapUrl(39.5, -98.35);
   }
@@ -120,7 +122,7 @@ export class AdminDashboardComponent implements OnInit {
 
   detectLocation(): void {
     if (!navigator.geolocation) {
-      this.alertStatus = 'Geolocation is not supported by your browser.';
+      this.alertStatusKey = 'alerts.status.geoUnsupported';
       return;
     }
 
@@ -133,7 +135,7 @@ export class AdminDashboardComponent implements OnInit {
         this.mapUrl = this.buildMapUrl(position.coords.latitude, position.coords.longitude);
       },
       () => {
-        this.alertStatus = 'Unable to detect location.';
+        this.alertStatusKey = 'alerts.status.geoFailed';
       }
     );
   }
@@ -147,19 +149,22 @@ export class AdminDashboardComponent implements OnInit {
 
   submitAlert(): void {
     if (this.alertForm.invalid || !this.selectedFile) {
-      this.alertStatus = 'Please add an image and location before submitting.';
+      this.alertStatusKey = 'alerts.status.missingData';
       this.alertForm.markAllAsTouched();
       return;
     }
 
     this.alertLoading = true;
-    this.alertStatus = '';
+    this.alertStatusKey = '';
 
     const formData = new FormData();
     formData.append('image', this.selectedFile);
     formData.append('latitude', String(this.alertForm.value.latitude ?? ''));
     formData.append('longitude', String(this.alertForm.value.longitude ?? ''));
-    formData.append('description', String(this.alertForm.value.description || 'Admin reported alert.'));
+    formData.append(
+      'description',
+      String(this.alertForm.value.description || this.i18n.translate('alerts.defaultDescription.admin'))
+    );
     if (this.alertForm.value.area_id) {
       formData.append('area_id', String(this.alertForm.value.area_id));
     }
@@ -167,14 +172,14 @@ export class AdminDashboardComponent implements OnInit {
     this.alertsService.createAlert(formData).subscribe({
       next: () => {
         this.alertLoading = false;
-        this.alertStatus = 'Alert submitted successfully.';
+        this.alertStatusKey = 'alerts.status.success';
         this.alertForm.patchValue({ description: '' });
         this.selectedFile = null;
         this.loadAlerts();
       },
       error: () => {
         this.alertLoading = false;
-        this.alertStatus = 'Unable to submit alert. Try again.';
+        this.alertStatusKey = 'alerts.status.failed';
       }
     });
   }
@@ -198,7 +203,7 @@ export class AdminDashboardComponent implements OnInit {
       risk_level: 'low',
       coordinates: ''
     });
-    this.statusMessage = '';
+    this.statusMessageKey = '';
   }
 
   saveArea(): void {
@@ -209,7 +214,7 @@ export class AdminDashboardComponent implements OnInit {
 
     const coords = this.parseCoordinates(this.areaForm.value.coordinates ?? '');
     if (!coords) {
-      this.statusMessage = 'Coordinates must be a valid JSON array of {lat,lng}.';
+      this.statusMessageKey = 'admin.areaForm.status.invalidCoordinates';
       return;
     }
 
@@ -228,12 +233,14 @@ export class AdminDashboardComponent implements OnInit {
 
     request.subscribe({
       next: () => {
-        this.statusMessage = this.editingAreaId ? 'Area updated.' : 'Area created.';
+        this.statusMessageKey = this.editingAreaId
+          ? 'admin.areaForm.status.updated'
+          : 'admin.areaForm.status.created';
         this.cancelEdit();
         this.loadAreas();
       },
       error: () => {
-        this.statusMessage = 'Unable to save area.';
+        this.statusMessageKey = 'admin.areaForm.status.failed';
       }
     });
   }

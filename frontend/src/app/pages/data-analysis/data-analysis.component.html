@@ -1,23 +1,23 @@
 <section class="page-header">
   <div>
-    <h2>Data Analysis</h2>
-    <p>Compare weather and risk signals for each area.</p>
+    <h2>{{ 'analysis.title' | translate }}</h2>
+    <p>{{ 'analysis.subtitle' | translate }}</p>
   </div>
 </section>
 
 <div class="table">
   <div class="table-row header">
-    <span>Area</span>
-    <span>Temperature</span>
-    <span>Humidity</span>
-    <span>Wind</span>
-    <span>Risk</span>
+    <span>{{ 'table.area' | translate }}</span>
+    <span>{{ 'table.temperature' | translate }}</span>
+    <span>{{ 'table.humidity' | translate }}</span>
+    <span>{{ 'table.wind' | translate }}</span>
+    <span>{{ 'table.risk' | translate }}</span>
   </div>
   <div class="table-row" *ngFor="let area of areas">
     <span>{{ area.name }}</span>
-    <span>{{ area.weather.temperature ?? 'N/A' }} deg C</span>
-    <span>{{ area.weather.humidity ?? 'N/A' }}%</span>
-    <span>{{ area.weather.wind_speed ?? 'N/A' }} km/h</span>
-    <span [class]="riskClass(area.risk_level)">{{ area.risk_level }}</span>
+    <span>{{ area.weather.temperature ?? ('common.na' | translate) }} {{ 'units.degC' | translate }}</span>
+    <span>{{ area.weather.humidity ?? ('common.na' | translate) }}%</span>
+    <span>{{ area.weather.wind_speed ?? ('common.na' | translate) }} {{ 'units.kmh' | translate }}</span>
+    <span [class]="riskClass(area.risk_level)">{{ ('risk.' + area.risk_level) | translate }}</span>
   </div>
 </div>

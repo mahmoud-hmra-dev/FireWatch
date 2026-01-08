@@ -24,6 +24,17 @@ body {
   min-height: 100vh;
 }
 
+html[dir="rtl"] body {
+  direction: rtl;
+  font-family: 'Cairo', sans-serif;
+}
+
+html[dir="rtl"] h1,
+html[dir="rtl"] h2,
+html[dir="rtl"] h3 {
+  font-family: 'Cairo', sans-serif;
+}
+
 body::before,
 body::after {
   content: '';
@@ -120,6 +131,14 @@ p {
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 1.5rem;
+}
+
+html[dir="rtl"] .top-nav,
+html[dir="rtl"] .nav-links,
+html[dir="rtl"] .nav-actions,
+html[dir="rtl"] .lang-switcher,
+html[dir="rtl"] .btn-row {
+  flex-direction: row-reverse;
 }
 
 label {

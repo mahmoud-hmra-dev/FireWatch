@@ -1,34 +1,36 @@
 <section class="page-header">
   <div>
-    <h2>Admin Command Center</h2>
-    <p>Manage areas, alerts, and predictive monitoring.</p>
+    <h2>{{ 'admin.title' | translate }}</h2>
+    <p>{{ 'admin.subtitle' | translate }}</p>
   </div>
   <button class="btn accent" (click)="togglePrediction()" [disabled]="predictionLoading">
-    {{ predictionEnabled ? 'Disable' : 'Enable' }} Prediction
+    {{ predictionEnabled ? ('admin.prediction.disable' | translate) : ('admin.prediction.enable' | translate) }}
   </button>
 </section>
 
 <section class="grid two">
   <div class="card">
     <div class="card-head">
-      <h3>Prediction System</h3>
-      <span class="pill" [class.active]="predictionEnabled">{{ predictionEnabled ? 'ON' : 'OFF' }}</span>
+      <h3>{{ 'admin.prediction.title' | translate }}</h3>
+      <span class="pill" [class.active]="predictionEnabled">
+        {{ predictionEnabled ? ('common.on' | translate) : ('common.off' | translate) }}
+      </span>
     </div>
     <p>
-      When enabled, FireWatch auto-creates alerts for high-risk areas and notifies admins.
+      {{ 'admin.prediction.description' | translate }}
     </p>
     <button class="btn primary" (click)="togglePrediction()" [disabled]="predictionLoading">
-      {{ predictionEnabled ? 'Turn Off' : 'Turn On' }}
+      {{ predictionEnabled ? ('admin.prediction.turnOff' | translate) : ('admin.prediction.turnOn' | translate) }}
     </button>
   </div>
 
   <div class="card">
     <div class="card-head">
-      <h3>Area Overview Map</h3>
-      <span class="pill">Risk Levels</span>
+      <h3>{{ 'admin.map.title' | translate }}</h3>
+      <span class="pill">{{ 'admin.map.riskLevels' | translate }}</span>
     </div>
     <div class="map">
-      <iframe [src]="mapUrl" title="Area map"></iframe>
+      <iframe [src]="mapUrl" [title]="'common.mapTitle' | translate"></iframe>
     </div>
     <div class="area-tags">
       <span *ngFor="let area of areas" [class]="riskClass(area.risk_level)">{{ area.name }}</span>
@@ -39,67 +41,75 @@
 <section class="grid two">
   <div class="card">
     <div class="card-head">
-      <h3>Area Snapshot</h3>
+      <h3>{{ 'admin.areaSnapshot' | translate }}</h3>
       <span class="pill" *ngIf="selectedArea">{{ selectedArea.name }}</span>
     </div>
     <label>
-      Select Area
+      {{ 'admin.selectArea' | translate }}
       <select #areaSelect (change)="onAreaChange(areaSelect.value)" [value]="selectedArea?.id">
         <option *ngFor="let area of areas" [value]="area.id">{{ area.name }}</option>
       </select>
     </label>
     <div class="risk-row" *ngIf="selectedArea">
-      <span class="label">Risk Level</span>
-      <span [class]="riskClass(selectedArea.risk_level)">{{ selectedArea.risk_level | uppercase }}</span>
+      <span class="label">{{ 'common.riskLevel' | translate }}</span>
+      <span [class]="riskClass(selectedArea.risk_level)">{{ ('risk.' + selectedArea.risk_level) | translate }}</span>
     </div>
     <div class="weather" *ngIf="selectedArea">
       <div>
-        <span class="label">Temperature</span>
-        <strong>{{ selectedArea.weather.temperature ?? 'N/A' }} deg C</strong>
+        <span class="label">{{ 'common.temperature' | translate }}</span>
+        <strong>{{ selectedArea.weather.temperature ?? ('common.na' | translate) }} {{ 'units.degC' | translate }}</strong>
       </div>
       <div>
-        <span class="label">Humidity</span>
-        <strong>{{ selectedArea.weather.humidity ?? 'N/A' }}%</strong>
+        <span class="label">{{ 'common.humidity' | translate }}</span>
+        <strong>{{ selectedArea.weather.humidity ?? ('common.na' | translate) }}%</strong>
       </div>
       <div>
-        <span class="label">Wind</span>
-        <strong>{{ selectedArea.weather.wind_speed ?? 'N/A' }} km/h</strong>
+        <span class="label">{{ 'common.wind' | translate }}</span>
+        <strong>{{ selectedArea.weather.wind_speed ?? ('common.na' | translate) }} {{ 'units.kmh' | translate }}</strong>
       </div>
     </div>
   </div>
 
   <div class="card">
     <div class="card-head">
-      <h3>Submit a Manual Alert</h3>
-      <button class="btn ghost" type="button" (click)="detectLocation()">Auto-detect location</button>
+      <h3>{{ 'alerts.form.title' | translate }}</h3>
+      <button class="btn ghost" type="button" (click)="detectLocation()">
+        {{ 'alerts.form.autoDetect' | translate }}
+      </button>
     </div>
     <form [formGroup]="alertForm" (ngSubmit)="submitAlert()" class="form-grid">
       <label>
-        Photo evidence
+        {{ 'alerts.form.photoEvidence' | translate }}
         <input type="file" (change)="onFileSelected($event)" />
       </label>
       <label>
-        Latitude
-        <input type="text" formControlName="latitude" placeholder="e.g. 34.0500" />
+        {{ 'alerts.form.latitude' | translate }}
+        <input type="text" formControlName="latitude" [placeholder]="'alerts.form.latitudePlaceholder' | translate" />
       </label>
       <label>
-        Longitude
-        <input type="text" formControlName="longitude" placeholder="e.g. -118.2500" />
+        {{ 'alerts.form.longitude' | translate }}
+        <input type="text" formControlName="longitude" [placeholder]="'alerts.form.longitudePlaceholder' | translate" />
       </label>
       <label>
-        Description (optional)
-        <textarea formControlName="description" rows="3" placeholder="Smoke sighting near trailhead..."></textarea>
+        {{ 'alerts.form.descriptionOptional' | translate }}
+        <textarea
+          formControlName="description"
+          rows="3"
+          [placeholder]="'alerts.form.descriptionPlaceholder' | translate"
+        ></textarea>
       </label>
       <label>
-        Related Area (optional)
+        {{ 'alerts.form.relatedAreaOptional' | translate }}
         <select formControlName="area_id">
-          <option value="">None</option>
+          <option value="">{{ 'common.none' | translate }}</option>
           <option *ngFor="let area of areas" [value]="area.id">{{ area.name }}</option>
         </select>
       </label>
 
-      <button class="btn primary" type="submit" [disabled]="alertLoading">{{ alertLoading ? 'Submitting...' : 'Send Alert' }}</button>
-      <p class="hint" *ngIf="alertStatus">{{ alertStatus }}</p>
+      <button class="btn primary" type="submit" [disabled]="alertLoading">
+        {{ alertLoading ? ('alerts.form.submitting' | translate) : ('alerts.form.submit' | translate) }}
+      </button>
+      <p class="hint" *ngIf="alertStatusKey">{{ alertStatusKey | translate }}</p>
     </form>
   </div>
 </section>
@@ -107,60 +117,68 @@
 <section class="grid two">
   <div class="card">
     <div class="card-head">
-      <h3>{{ editingAreaId ? 'Edit Area' : 'Add New Area' }}</h3>
+      <h3>{{ editingAreaId ? ('admin.areaForm.title.edit' | translate) : ('admin.areaForm.title.add' | translate) }}</h3>
     </div>
     <form [formGroup]="areaForm" (ngSubmit)="saveArea()" class="form-grid">
       <label>
-        Name
-        <input type="text" formControlName="name" placeholder="Northern Ridge" />
+        {{ 'admin.areaForm.name' | translate }}
+        <input type="text" formControlName="name" [placeholder]="'admin.areaForm.namePlaceholder' | translate" />
       </label>
       <label>
-        Risk Level
+        {{ 'admin.areaForm.riskLevel' | translate }}
         <select formControlName="risk_level">
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
+          <option value="low">{{ 'risk.low' | translate }}</option>
+          <option value="medium">{{ 'risk.medium' | translate }}</option>
+          <option value="high">{{ 'risk.high' | translate }}</option>
         </select>
       </label>
       <label>
-        Coordinates (JSON Array)
-        <textarea formControlName="coordinates" rows="5" placeholder='[{"lat": 34.1, "lng": -118.2}, {"lat": 34.2, "lng": -118.3}, {"lat": 34.15, "lng": -118.4}]'></textarea>
+        {{ 'admin.areaForm.coordinates' | translate }}
+        <textarea
+          formControlName="coordinates"
+          rows="5"
+          [placeholder]="'admin.areaForm.coordinatesPlaceholder' | translate"
+        ></textarea>
       </label>
       <label>
-        Temperature (deg C)
+        {{ 'admin.areaForm.temperature' | translate }}
         <input type="number" formControlName="temperature" />
       </label>
       <label>
-        Humidity (%)
+        {{ 'admin.areaForm.humidity' | translate }}
         <input type="number" formControlName="humidity" />
       </label>
       <label>
-        Wind Speed (km/h)
+        {{ 'admin.areaForm.wind' | translate }}
         <input type="number" formControlName="wind_speed" />
       </label>
 
       <div class="btn-row">
-        <button class="btn primary" type="submit">{{ editingAreaId ? 'Save Changes' : 'Create Area' }}</button>
-        <button class="btn ghost" type="button" *ngIf="editingAreaId" (click)="cancelEdit()">Cancel</button>
+        <button class="btn primary" type="submit">
+          {{ editingAreaId ? ('admin.areaForm.save' | translate) : ('admin.areaForm.create' | translate) }}
+        </button>
+        <button class="btn ghost" type="button" *ngIf="editingAreaId" (click)="cancelEdit()">
+          {{ 'common.cancel' | translate }}
+        </button>
       </div>
-      <p class="hint" *ngIf="statusMessage">{{ statusMessage }}</p>
+      <p class="hint" *ngIf="statusMessageKey">{{ statusMessageKey | translate }}</p>
     </form>
   </div>
 
   <div class="card">
     <div class="card-head">
-      <h3>Areas</h3>
-      <span class="pill">{{ areas.length }} total</span>
+      <h3>{{ 'admin.areas.title' | translate }}</h3>
+      <span class="pill">{{ 'admin.areas.total' | translate:{ count: areas.length } }}</span>
     </div>
     <div class="list">
       <div class="list-item" *ngFor="let area of areas">
         <div>
           <strong>{{ area.name }}</strong>
-          <p>{{ area.risk_level | uppercase }} risk</p>
+          <p>{{ ('risk.' + area.risk_level) | translate }}</p>
         </div>
         <div class="actions">
-          <button class="btn ghost" type="button" (click)="startEdit(area)">Edit</button>
-          <button class="btn ghost" type="button" (click)="deleteArea(area)">Delete</button>
+          <button class="btn ghost" type="button" (click)="startEdit(area)">{{ 'admin.areas.edit' | translate }}</button>
+          <button class="btn ghost" type="button" (click)="deleteArea(area)">{{ 'admin.areas.delete' | translate }}</button>
         </div>
       </div>
     </div>
@@ -169,37 +187,37 @@
 
 <section class="card">
   <div class="card-head">
-    <h3>Alert History</h3>
-    <span class="pill">{{ filteredAlerts.length }} alerts</span>
+    <h3>{{ 'admin.alertHistory.title' | translate }}</h3>
+    <span class="pill">{{ 'admin.alertHistory.count' | translate:{ count: filteredAlerts.length } }}</span>
   </div>
   <div class="filters" [formGroup]="filterForm">
-    <input type="text" placeholder="Search description" formControlName="search" />
+    <input type="text" [placeholder]="'filters.searchDescription' | translate" formControlName="search" />
     <select formControlName="source">
-      <option value="">All Sources</option>
-      <option value="manual">Manual</option>
-      <option value="auto">Auto</option>
+      <option value="">{{ 'filters.allSources' | translate }}</option>
+      <option value="manual">{{ 'source.manual' | translate }}</option>
+      <option value="auto">{{ 'source.auto' | translate }}</option>
     </select>
     <select formControlName="area_id">
-      <option value="">All Areas</option>
+      <option value="">{{ 'filters.allAreas' | translate }}</option>
       <option *ngFor="let area of areas" [value]="area.id">{{ area.name }}</option>
     </select>
     <select formControlName="time">
-      <option value="all">All Time</option>
-      <option value="24h">Last 24 Hours</option>
-      <option value="7d">Last 7 Days</option>
+      <option value="all">{{ 'filters.allTime' | translate }}</option>
+      <option value="24h">{{ 'filters.last24h' | translate }}</option>
+      <option value="7d">{{ 'filters.last7d' | translate }}</option>
     </select>
   </div>
   <div class="table">
     <div class="table-row header">
-      <span>Source</span>
-      <span>Description</span>
-      <span>Area</span>
-      <span>Time</span>
+      <span>{{ 'table.source' | translate }}</span>
+      <span>{{ 'table.description' | translate }}</span>
+      <span>{{ 'table.area' | translate }}</span>
+      <span>{{ 'table.time' | translate }}</span>
     </div>
     <div class="table-row" *ngFor="let alert of filteredAlerts">
-      <span>{{ alert.source }}</span>
-      <span>{{ alert.description || 'No description' }}</span>
-      <span>{{ alert.area?.name || 'Unassigned' }}</span>
+      <span>{{ ('source.' + alert.source) | translate }}</span>
+      <span>{{ alert.description || ('alerts.noDescription' | translate) }}</span>
+      <span>{{ alert.area?.name || ('alerts.unassigned' | translate) }}</span>
       <span>{{ alert.created_at | date:'short' }}</span>
     </div>
   </div>

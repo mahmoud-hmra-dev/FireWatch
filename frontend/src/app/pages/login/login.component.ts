@@ -10,8 +10,8 @@ import { AuthService } from '../../core/auth.service';
 })
 export class LoginComponent implements OnInit {
   loading = false;
-  error = '';
-  roleHint = '';
+  errorKey = '';
+  roleHintKey = '';
 
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -28,7 +28,8 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((params) => {
       const role = params.get('role');
-      this.roleHint = role === 'admin' ? 'Admin access only.' : role === 'user' ? 'User access only.' : '';
+      this.roleHintKey =
+        role === 'admin' ? 'auth.login.hint.admin' : role === 'user' ? 'auth.login.hint.user' : '';
     });
   }
 
@@ -38,7 +39,7 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    this.error = '';
+    this.errorKey = '';
     this.loading = true;
 
     this.auth
@@ -55,7 +56,7 @@ export class LoginComponent implements OnInit {
         },
         error: () => {
           this.loading = false;
-          this.error = 'Login failed. Check your credentials.';
+          this.errorKey = 'auth.login.error';
         }
       });
   }

@@ -4,6 +4,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { AlertsService } from '../../core/alerts.service';
 import { AreasService } from '../../core/areas.service';
 import { Alert, Area } from '../../core/models';
+import { I18nService } from '../../core/i18n.service';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -13,9 +14,9 @@ import { Alert, Area } from '../../core/models';
 export class UserDashboardComponent implements OnInit {
   areas: Area[] = [];
   selectedArea: Area | null = null;
-  areasError = '';
+  areasErrorKey = '';
   mapUrl: SafeResourceUrl;
-  alertStatus = '';
+  alertStatusKey = '';
   alertLoading = false;
   selectedFile: File | null = null;
   recentAlerts: Alert[] = [];
@@ -31,7 +32,8 @@ export class UserDashboardComponent implements OnInit {
     private fb: FormBuilder,
     private alertsService: AlertsService,
     private areasService: AreasService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private i18n: I18nService
   ) {
     this.mapUrl = this.buildMapUrl(37.7749, -122.4194);
   }
@@ -52,7 +54,7 @@ export class UserDashboardComponent implements OnInit {
         }
       },
       error: () => {
-        this.areasError = 'Areas are unavailable. Please contact an admin.';
+        this.areasErrorKey = 'user.areasError';
       }
     });
   }
@@ -75,7 +77,7 @@ export class UserDashboardComponent implements OnInit {
 
   detectLocation(): void {
     if (!navigator.geolocation) {
-      this.alertStatus = 'Geolocation is not supported by your browser.';
+      this.alertStatusKey = 'alerts.status.geoUnsupported';
       return;
     }
 
@@ -88,7 +90,7 @@ export class UserDashboardComponent implements OnInit {
         this.mapUrl = this.buildMapUrl(position.coords.latitude, position.coords.longitude);
       },
       () => {
-        this.alertStatus = 'Unable to detect location.';
+        this.alertStatusKey = 'alerts.status.geoFailed';
       }
     );
   }
@@ -102,19 +104,22 @@ export class UserDashboardComponent implements OnInit {
 
   submitAlert(): void {
     if (this.alertForm.invalid || !this.selectedFile) {
-      this.alertStatus = 'Please add an image and location before submitting.';
+      this.alertStatusKey = 'alerts.status.missingData';
       this.alertForm.markAllAsTouched();
       return;
     }
 
     this.alertLoading = true;
-    this.alertStatus = '';
+    this.alertStatusKey = '';
 
     const formData = new FormData();
     formData.append('image', this.selectedFile);
     formData.append('latitude', String(this.alertForm.value.latitude ?? ''));
     formData.append('longitude', String(this.alertForm.value.longitude ?? ''));
-    formData.append('description', String(this.alertForm.value.description || 'User reported alert.'));
+    formData.append(
+      'description',
+      String(this.alertForm.value.description || this.i18n.translate('alerts.defaultDescription.user'))
+    );
     if (this.alertForm.value.area_id) {
       formData.append('area_id', String(this.alertForm.value.area_id));
     }
@@ -122,14 +127,14 @@ export class UserDashboardComponent implements OnInit {
     this.alertsService.createAlert(formData).subscribe({
       next: () => {
         this.alertLoading = false;
-        this.alertStatus = 'Alert submitted successfully.';
+        this.alertStatusKey = 'alerts.status.success';
         this.alertForm.patchValue({ description: '' });
         this.selectedFile = null;
         this.loadAlerts();
       },
       error: () => {
         this.alertLoading = false;
-        this.alertStatus = 'Unable to submit alert. Try again.';
+        this.alertStatusKey = 'alerts.status.failed';
       }
     });
   }

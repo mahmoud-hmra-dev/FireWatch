@@ -14,6 +14,7 @@ import { MapsComponent } from './pages/maps/maps.component';
 import { DataAnalysisComponent } from './pages/data-analysis/data-analysis.component';
 import { AlertsComponent } from './pages/alerts/alerts.component';
 import { AuthInterceptor } from './core/auth.interceptor';
+import { TranslatePipe } from './core/translate.pipe';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { AuthInterceptor } from './core/auth.interceptor';
     AdminDashboardComponent,
     MapsComponent,
     DataAnalysisComponent,
-    AlertsComponent
+    AlertsComponent,
+    TranslatePipe
   ],
   imports: [
     BrowserModule,

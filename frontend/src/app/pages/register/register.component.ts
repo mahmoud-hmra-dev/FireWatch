@@ -10,7 +10,7 @@ import { AuthService } from '../../core/auth.service';
 })
 export class RegisterComponent {
   loading = false;
-  error = '';
+  errorKey = '';
 
   form = this.fb.group({
     name: ['', Validators.required],
@@ -28,12 +28,12 @@ export class RegisterComponent {
     }
 
     if (this.form.value.password !== this.form.value.password_confirmation) {
-      this.error = 'Passwords do not match.';
+      this.errorKey = 'auth.register.error.passwordMismatch';
       return;
     }
 
     this.loading = true;
-    this.error = '';
+    this.errorKey = '';
 
     this.auth
       .register({
@@ -50,7 +50,7 @@ export class RegisterComponent {
         },
         error: () => {
           this.loading = false;
-          this.error = 'Registration failed. Try again.';
+          this.errorKey = 'auth.register.error.failed';
         }
       });
   }

@@ -1,32 +1,38 @@
 <section class="auth-card">
   <div class="auth-header">
-    <h2>Create your account</h2>
-    <p>Get real-time alerts and area insights.</p>
+    <h2>{{ 'auth.register.title' | translate }}</h2>
+    <p>{{ 'auth.register.subtitle' | translate }}</p>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
     <label>
-      Name
-      <input type="text" formControlName="name" placeholder="Your name" />
+      {{ 'auth.name.label' | translate }}
+      <input type="text" formControlName="name" [placeholder]="'auth.name.placeholder' | translate" />
     </label>
     <label>
-      Email
-      <input type="email" formControlName="email" placeholder="name@example.com" />
+      {{ 'auth.email.label' | translate }}
+      <input type="email" formControlName="email" [placeholder]="'auth.email.placeholder' | translate" />
     </label>
     <label>
-      Password
-      <input type="password" formControlName="password" placeholder="Minimum 8 characters" />
+      {{ 'auth.password.label' | translate }}
+      <input type="password" formControlName="password" [placeholder]="'auth.password.placeholder' | translate" />
     </label>
     <label>
-      Confirm Password
-      <input type="password" formControlName="password_confirmation" placeholder="Repeat password" />
+      {{ 'auth.passwordConfirm.label' | translate }}
+      <input
+        type="password"
+        formControlName="password_confirmation"
+        [placeholder]="'auth.passwordConfirm.placeholder' | translate"
+      />
     </label>
 
-    <button class="btn primary" type="submit" [disabled]="loading">{{ loading ? 'Creating...' : 'Create Account' }}</button>
-    <p class="error" *ngIf="error">{{ error }}</p>
+    <button class="btn primary" type="submit" [disabled]="loading">
+      {{ loading ? ('auth.register.loading' | translate) : ('auth.register.submit' | translate) }}
+    </button>
+    <p class="error" *ngIf="errorKey">{{ errorKey | translate }}</p>
   </form>
 
   <p class="switch">
-    Already have an account? <a routerLink="/login">Sign in</a>
+    {{ 'auth.register.switchPrompt' | translate }} <a routerLink="/login">{{ 'auth.register.switchLink' | translate }}</a>
   </p>
 </section>

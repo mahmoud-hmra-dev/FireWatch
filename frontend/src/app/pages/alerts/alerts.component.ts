@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { AlertsService } from '../../core/alerts.service';
 import { Alert } from '../../core/models';
+import { I18nService } from '../../core/i18n.service';
 
 @Component({
   selector: 'app-alerts',
@@ -18,7 +19,7 @@ export class AlertsComponent implements OnInit {
     time: ['all']
   });
 
-  constructor(private fb: FormBuilder, private alertsService: AlertsService) {}
+  constructor(private fb: FormBuilder, private alertsService: AlertsService, private i18n: I18nService) {}
 
   ngOnInit(): void {
     this.loadAlerts();
@@ -43,6 +44,13 @@ export class AlertsComponent implements OnInit {
       const matchesTime = this.matchesTimeFilter(alert.created_at, time ?? 'all');
       return matchesArea && matchesRisk && matchesTime;
     });
+  }
+
+  riskLabel(level?: string | null): string {
+    if (!level) {
+      return this.i18n.translate('common.na');
+    }
+    return this.i18n.translate(`risk.${level}`);
   }
 
   private matchesTimeFilter(value: string | undefined, filter: string): boolean {

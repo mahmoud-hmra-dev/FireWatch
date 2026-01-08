@@ -1,44 +1,44 @@
 <section class="page-header">
   <div>
-    <h2>User Dashboard</h2>
-    <p>Monitor your local area and report incidents fast.</p>
+    <h2>{{ 'user.title' | translate }}</h2>
+    <p>{{ 'user.subtitle' | translate }}</p>
   </div>
 </section>
 
 <section class="grid two">
   <div class="card">
     <div class="card-head">
-      <h3>Area Snapshot</h3>
+      <h3>{{ 'user.areaSnapshot' | translate }}</h3>
       <span class="pill" *ngIf="selectedArea">{{ selectedArea.name }}</span>
     </div>
 
-    <div *ngIf="areasError" class="alert warning">{{ areasError }}</div>
+    <div *ngIf="areasErrorKey" class="alert warning">{{ areasErrorKey | translate }}</div>
 
-    <div *ngIf="!areasError">
+    <div *ngIf="!areasErrorKey">
       <label>
-        Select Area
+        {{ 'user.selectArea' | translate }}
         <select #areaSelect (change)="onAreaChange(areaSelect.value)" [value]="selectedArea?.id">
           <option *ngFor="let area of areas" [value]="area.id">{{ area.name }}</option>
         </select>
       </label>
 
       <div class="risk-row" *ngIf="selectedArea">
-        <span class="label">Risk Level</span>
-        <span [class]="riskClass(selectedArea.risk_level)">{{ selectedArea.risk_level | uppercase }}</span>
+        <span class="label">{{ 'common.riskLevel' | translate }}</span>
+        <span [class]="riskClass(selectedArea.risk_level)">{{ ('risk.' + selectedArea.risk_level) | translate }}</span>
       </div>
 
       <div class="weather" *ngIf="selectedArea">
         <div>
-          <span class="label">Temperature</span>
-          <strong>{{ selectedArea.weather.temperature ?? 'N/A' }} deg C</strong>
+          <span class="label">{{ 'common.temperature' | translate }}</span>
+          <strong>{{ selectedArea.weather.temperature ?? ('common.na' | translate) }} {{ 'units.degC' | translate }}</strong>
         </div>
         <div>
-          <span class="label">Humidity</span>
-          <strong>{{ selectedArea.weather.humidity ?? 'N/A' }}%</strong>
+          <span class="label">{{ 'common.humidity' | translate }}</span>
+          <strong>{{ selectedArea.weather.humidity ?? ('common.na' | translate) }}%</strong>
         </div>
         <div>
-          <span class="label">Wind</span>
-          <strong>{{ selectedArea.weather.wind_speed ?? 'N/A' }} km/h</strong>
+          <span class="label">{{ 'common.wind' | translate }}</span>
+          <strong>{{ selectedArea.weather.wind_speed ?? ('common.na' | translate) }} {{ 'units.kmh' | translate }}</strong>
         </div>
       </div>
     </div>
@@ -46,11 +46,11 @@
 
   <div class="card">
     <div class="card-head">
-      <h3>Live Map</h3>
-      <span class="pill">OpenStreetMap</span>
+      <h3>{{ 'user.liveMap' | translate }}</h3>
+      <span class="pill">{{ 'user.mapProvider' | translate }}</span>
     </div>
     <div class="map">
-      <iframe [src]="mapUrl" title="Area map"></iframe>
+      <iframe [src]="mapUrl" [title]="'common.mapTitle' | translate"></iframe>
     </div>
   </div>
 </section>
@@ -58,55 +58,63 @@
 <section class="grid two">
   <div class="card">
     <div class="card-head">
-      <h3>Submit a Manual Alert</h3>
-      <button class="btn ghost" type="button" (click)="detectLocation()">Auto-detect location</button>
+      <h3>{{ 'alerts.form.title' | translate }}</h3>
+      <button class="btn ghost" type="button" (click)="detectLocation()">
+        {{ 'alerts.form.autoDetect' | translate }}
+      </button>
     </div>
     <form [formGroup]="alertForm" (ngSubmit)="submitAlert()" class="form-grid">
       <label>
-        Photo evidence
+        {{ 'alerts.form.photoEvidence' | translate }}
         <input type="file" (change)="onFileSelected($event)" />
       </label>
       <label>
-        Latitude
-        <input type="text" formControlName="latitude" placeholder="e.g. 34.0500" />
+        {{ 'alerts.form.latitude' | translate }}
+        <input type="text" formControlName="latitude" [placeholder]="'alerts.form.latitudePlaceholder' | translate" />
       </label>
       <label>
-        Longitude
-        <input type="text" formControlName="longitude" placeholder="e.g. -118.2500" />
+        {{ 'alerts.form.longitude' | translate }}
+        <input type="text" formControlName="longitude" [placeholder]="'alerts.form.longitudePlaceholder' | translate" />
       </label>
       <label>
-        Description (optional)
-        <textarea formControlName="description" rows="3" placeholder="Smoke sighting near trailhead..."></textarea>
+        {{ 'alerts.form.descriptionOptional' | translate }}
+        <textarea
+          formControlName="description"
+          rows="3"
+          [placeholder]="'alerts.form.descriptionPlaceholder' | translate"
+        ></textarea>
       </label>
       <label>
-        Related Area (optional)
+        {{ 'alerts.form.relatedAreaOptional' | translate }}
         <select formControlName="area_id">
-          <option value="">None</option>
+          <option value="">{{ 'common.none' | translate }}</option>
           <option *ngFor="let area of areas" [value]="area.id">{{ area.name }}</option>
         </select>
       </label>
 
-      <button class="btn primary" type="submit" [disabled]="alertLoading">{{ alertLoading ? 'Submitting...' : 'Send Alert' }}</button>
-      <p class="hint" *ngIf="alertStatus">{{ alertStatus }}</p>
+      <button class="btn primary" type="submit" [disabled]="alertLoading">
+        {{ alertLoading ? ('alerts.form.submitting' | translate) : ('alerts.form.submit' | translate) }}
+      </button>
+      <p class="hint" *ngIf="alertStatusKey">{{ alertStatusKey | translate }}</p>
     </form>
   </div>
 
   <div class="card">
     <div class="card-head">
-      <h3>Recent Alerts</h3>
-      <span class="pill">Your activity</span>
+      <h3>{{ 'user.recentAlerts' | translate }}</h3>
+      <span class="pill">{{ 'user.recentAlerts.subtitle' | translate }}</span>
     </div>
     <div class="list" *ngIf="recentAlerts.length > 0; else noAlerts">
       <div class="list-item" *ngFor="let alert of recentAlerts">
         <div>
-          <strong>{{ alert.source | uppercase }}</strong>
-          <p>{{ alert.description || 'No description' }}</p>
+          <strong>{{ ('source.' + alert.source) | translate }}</strong>
+          <p>{{ alert.description || ('alerts.noDescription' | translate) }}</p>
         </div>
         <span class="tiny">{{ alert.created_at | date:'short' }}</span>
       </div>
     </div>
     <ng-template #noAlerts>
-      <p class="hint">No alerts submitted yet.</p>
+      <p class="hint">{{ 'alerts.noneSubmitted' | translate }}</p>
     </ng-template>
   </div>
 </section>

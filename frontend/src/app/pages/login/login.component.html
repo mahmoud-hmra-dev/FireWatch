@@ -1,25 +1,27 @@
 <section class="auth-card">
   <div class="auth-header">
-    <h2>Welcome back</h2>
-    <p>Sign in to access FireWatch dashboards.</p>
-    <span class="hint" *ngIf="roleHint">{{ roleHint }}</span>
+    <h2>{{ 'auth.login.title' | translate }}</h2>
+    <p>{{ 'auth.login.subtitle' | translate }}</p>
+    <span class="hint" *ngIf="roleHintKey">{{ roleHintKey | translate }}</span>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
     <label>
-      Email
-      <input type="email" formControlName="email" placeholder="name@example.com" />
+      {{ 'auth.email.label' | translate }}
+      <input type="email" formControlName="email" [placeholder]="'auth.email.placeholder' | translate" />
     </label>
     <label>
-      Password
+      {{ 'auth.password.label' | translate }}
       <input type="password" formControlName="password" placeholder="********" />
     </label>
 
-    <button class="btn primary" type="submit" [disabled]="loading">{{ loading ? 'Signing in...' : 'Login' }}</button>
-    <p class="error" *ngIf="error">{{ error }}</p>
+    <button class="btn primary" type="submit" [disabled]="loading">
+      {{ loading ? ('auth.login.loading' | translate) : ('auth.login.submit' | translate) }}
+    </button>
+    <p class="error" *ngIf="errorKey">{{ errorKey | translate }}</p>
   </form>
 
   <p class="switch">
-    New here? <a routerLink="/register">Create an account</a>
+    {{ 'auth.login.switchPrompt' | translate }} <a routerLink="/register">{{ 'auth.login.switchLink' | translate }}</a>
   </p>
 </section>
