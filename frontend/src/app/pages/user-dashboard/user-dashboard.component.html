@@ -50,7 +50,7 @@
       <span class="pill">{{ 'user.mapProvider' | translate }}</span>
     </div>
     <div class="map">
-      <iframe [src]="mapUrl" [title]="'common.mapTitle' | translate"></iframe>
+      <div #mapCanvas class="map-canvas" [attr.aria-label]="'common.mapTitle' | translate"></div>
     </div>
   </div>
 </section>

@@ -1,18 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 import { AlertsService } from '../../core/alerts.service';
 import { AreasService } from '../../core/areas.service';
 import { PredictionService } from '../../core/prediction.service';
 import { Alert, Area, AreaCoordinate } from '../../core/models';
 import { I18nService } from '../../core/i18n.service';
 
+declare const L: any;
+
 @Component({
   selector: 'app-admin-dashboard',
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
-export class AdminDashboardComponent implements OnInit {
+export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('mapCanvas') mapElement?: ElementRef<HTMLDivElement>;
   areas: Area[] = [];
   alerts: Alert[] = [];
   filteredAlerts: Alert[] = [];
@@ -20,10 +23,14 @@ export class AdminDashboardComponent implements OnInit {
   predictionLoading = false;
   statusMessageKey = '';
   selectedArea: Area | null = null;
-  mapUrl: SafeResourceUrl;
   alertStatusKey = '';
   alertLoading = false;
   selectedFile: File | null = null;
+  private map: any;
+  private areaLayerGroup: any;
+  private alertLayerGroup: any;
+  private areaLayers = new Map<number, any>();
+  private langSubscription?: Subscription;
 
   filterForm = this.fb.group({
     search: [''],
@@ -55,13 +62,15 @@ export class AdminDashboardComponent implements OnInit {
     private alertsService: AlertsService,
     private areasService: AreasService,
     private predictionService: PredictionService,
-    private sanitizer: DomSanitizer,
     private i18n: I18nService
-  ) {
-    this.mapUrl = this.buildMapUrl(39.5, -98.35);
-  }
+  ) {}
 
   ngOnInit(): void {
+    this.langSubscription = this.i18n.lang$.subscribe(() => {
+      this.renderAreas();
+      this.renderAlerts();
+    });
+
     this.loadAreas();
     this.loadAlerts();
     this.loadPrediction();
@@ -69,13 +78,44 @@ export class AdminDashboardComponent implements OnInit {
     this.filterForm.valueChanges.subscribe(() => this.applyAlertFilters());
   }
 
+  ngAfterViewInit(): void {
+    if (!this.mapElement?.nativeElement || typeof L === 'undefined') {
+      return;
+    }
+
+    this.map = L.map(this.mapElement.nativeElement, {
+      zoomControl: true
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(this.map);
+
+    this.areaLayerGroup = L.layerGroup().addTo(this.map);
+    this.alertLayerGroup = L.layerGroup().addTo(this.map);
+    this.map.setView([39.5, -98.35], 4);
+    this.renderAreas(true);
+    this.renderAlerts();
+    if (this.selectedArea) {
+      this.focusArea(this.selectedArea);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.langSubscription?.unsubscribe();
+    if (this.map) {
+      this.map.remove();
+    }
+  }
+
   loadAreas(): void {
     this.areasService.listAreas().subscribe({
       next: (areas) => {
         this.areas = areas;
         this.selectedArea = areas[0] ?? null;
-        if (this.selectedArea?.coordinates[0]) {
-          this.mapUrl = this.buildMapUrl(this.selectedArea.coordinates[0].lat, this.selectedArea.coordinates[0].lng);
+        this.renderAreas(true);
+        if (this.selectedArea) {
+          this.focusArea(this.selectedArea);
           this.alertForm.patchValue({ area_id: String(this.selectedArea.id) });
         }
       }
@@ -87,6 +127,7 @@ export class AdminDashboardComponent implements OnInit {
       next: (alerts) => {
         this.alerts = alerts;
         this.filteredAlerts = alerts;
+        this.renderAlerts();
       }
     });
   }
@@ -115,8 +156,8 @@ export class AdminDashboardComponent implements OnInit {
   onAreaChange(areaId: string): void {
     const selected = this.areas.find((area) => area.id === Number(areaId)) || null;
     this.selectedArea = selected;
-    if (selected?.coordinates[0]) {
-      this.mapUrl = this.buildMapUrl(selected.coordinates[0].lat, selected.coordinates[0].lng);
+    if (selected) {
+      this.focusArea(selected);
     }
   }
 
@@ -132,7 +173,7 @@ export class AdminDashboardComponent implements OnInit {
           latitude: position.coords.latitude.toFixed(6),
           longitude: position.coords.longitude.toFixed(6)
         });
-        this.mapUrl = this.buildMapUrl(position.coords.latitude, position.coords.longitude);
+        this.focusLatLng(position.coords.latitude, position.coords.longitude);
       },
       () => {
         this.alertStatusKey = 'alerts.status.geoFailed';
@@ -179,9 +220,10 @@ export class AdminDashboardComponent implements OnInit {
         this.alertForm.patchValue({ description: '' });
         this.selectedFile = null;
         if (Number.isFinite(latitudeValue) && Number.isFinite(longitudeValue)) {
-          this.mapUrl = this.buildMapUrl(latitudeValue, longitudeValue);
+          this.focusLatLng(latitudeValue, longitudeValue);
         }
         this.loadAlerts();
+        this.loadAreas();
       },
       error: () => {
         this.alertLoading = false;
@@ -276,6 +318,140 @@ export class AdminDashboardComponent implements OnInit {
     return `risk ${level ?? 'neutral'}`;
   }
 
+  private focusArea(area: Area): void {
+    if (!this.map) {
+      return;
+    }
+
+    const layer = this.areaLayers.get(area.id);
+    if (layer?.getBounds) {
+      this.map.flyToBounds(layer.getBounds(), { padding: [40, 40], maxZoom: 12 });
+    } else if (layer?.getLatLng) {
+      this.map.flyTo(layer.getLatLng(), 12);
+    }
+
+    if (layer?.openPopup) {
+      layer.openPopup();
+    }
+  }
+
+  private focusLatLng(lat: number, lng: number): void {
+    if (!this.map || !Number.isFinite(lat) || !Number.isFinite(lng)) {
+      return;
+    }
+
+    this.map.flyTo([lat, lng], 12);
+  }
+
+  private renderAreas(fitToBounds = false): void {
+    if (!this.map || !this.areaLayerGroup) {
+      return;
+    }
+
+    this.areaLayerGroup.clearLayers();
+    this.areaLayers.clear();
+
+    const bounds = L.latLngBounds([]);
+
+    this.areas.forEach((area) => {
+      const coords = (area.coordinates || [])
+        .filter((point) => Number.isFinite(point.lat) && Number.isFinite(point.lng))
+        .map((point) => [point.lat, point.lng]);
+
+      if (coords.length === 0) {
+        return;
+      }
+
+      coords.forEach((point) => bounds.extend(point));
+      const color = this.riskColor(area.risk_level);
+      const layer = coords.length >= 3
+        ? L.polygon(coords, { color, weight: 2, fillColor: color, fillOpacity: 0.2 })
+        : L.marker(coords[0], { title: area.name });
+
+      layer.bindPopup(this.buildAreaPopup(area));
+      layer.on('click', () => {
+        this.selectedArea = area;
+      });
+      layer.addTo(this.areaLayerGroup);
+      this.areaLayers.set(area.id, layer);
+    });
+
+    if (fitToBounds && bounds.isValid()) {
+      this.map.fitBounds(bounds, { padding: [40, 40] });
+    }
+  }
+
+  private renderAlerts(): void {
+    if (!this.map || !this.alertLayerGroup) {
+      return;
+    }
+
+    this.alertLayerGroup.clearLayers();
+
+    this.alerts.forEach((alert) => {
+      const lat = Number(alert.latitude);
+      const lng = Number(alert.longitude);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+        return;
+      }
+
+      const marker = L.circleMarker([lat, lng], {
+        radius: 8,
+        color: '#d94545',
+        weight: 2,
+        fillColor: '#d94545',
+        fillOpacity: 0.6
+      });
+
+      marker.bindPopup(this.buildAlertPopup(alert));
+      marker.addTo(this.alertLayerGroup);
+    });
+  }
+
+  private buildAreaPopup(area: Area): string {
+    const riskLabel = area.risk_level ? this.i18n.translate(`risk.${area.risk_level}`) : this.i18n.translate('common.na');
+    const areaName = this.escapeHtml(area.name);
+    return `<strong>${areaName}</strong><br>${this.i18n.translate('common.riskLevel')}: ${riskLabel}`;
+  }
+
+  private buildAlertPopup(alert: Alert): string {
+    const sourceLabel = alert.source ? this.i18n.translate(`source.${alert.source}`) : this.i18n.translate('common.na');
+    const description = this.escapeHtml(alert.description || this.i18n.translate('alerts.noDescription'));
+    const timeLabel = alert.created_at ? new Date(alert.created_at).toLocaleString() : this.i18n.translate('common.na');
+    const imageHtml = alert.image_url
+      ? `<img src="${this.escapeHtml(alert.image_url)}" alt="${this.escapeHtml(this.i18n.translate('maps.alertPopup.photoAlt'))}" style="width: 180px; max-width: 100%; border-radius: 8px; margin-top: 6px; display: block;">`
+      : '';
+    return `
+      <strong>${this.i18n.translate('maps.alertPopup.title')}</strong><br>
+      ${this.i18n.translate('maps.alertPopup.source')}: ${sourceLabel}<br>
+      ${this.i18n.translate('maps.alertPopup.description')}: ${description}<br>
+      ${this.i18n.translate('maps.alertPopup.time')}: ${timeLabel}
+      ${imageHtml ? `<br>${imageHtml}` : ''}
+    `;
+  }
+
+  private riskColor(level?: string): string {
+    if (level === 'low') {
+      return '#39b75b';
+    }
+    if (level === 'medium') {
+      return '#f5a623';
+    }
+    if (level === 'high') {
+      return '#d94545';
+    }
+    return '#9aa7a1';
+  }
+
+  private escapeHtml(value: string): string {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   private parseCoordinates(text: string): AreaCoordinate[] | null {
     try {
       const parsed = JSON.parse(text) as AreaCoordinate[];
@@ -319,10 +495,4 @@ export class AdminDashboardComponent implements OnInit {
     return Number.isNaN(parsed) ? null : parsed;
   }
 
-  private buildMapUrl(lat: number, lng: number): SafeResourceUrl {
-    const delta = 0.2;
-    const bbox = `${lng - delta},${lat - delta},${lng + delta},${lat + delta}`;
-    const url = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lng}`;
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-  }
 }

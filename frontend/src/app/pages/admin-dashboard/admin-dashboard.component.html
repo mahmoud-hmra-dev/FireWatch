@@ -30,7 +30,7 @@
       <span class="pill">{{ 'admin.map.riskLevels' | translate }}</span>
     </div>
     <div class="map">
-      <iframe [src]="mapUrl" [title]="'common.mapTitle' | translate"></iframe>
+      <div #mapCanvas class="map-canvas" [attr.aria-label]="'common.mapTitle' | translate"></div>
     </div>
     <div class="area-tags">
       <span *ngFor="let area of areas" [class]="riskClass(area.risk_level)">{{ area.name }}</span>
