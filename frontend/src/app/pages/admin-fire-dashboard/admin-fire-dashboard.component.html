@@ -1,0 +1,68 @@
+<section class="page-header">
+  <div>
+    <h2>{{ 'adminFire.title' | translate }}</h2>
+    <p>{{ 'adminFire.subtitle' | translate }}</p>
+  </div>
+</section>
+
+<section *ngIf="errorKey" class="alert warning">{{ errorKey | translate }}</section>
+
+<section class="grid" *ngIf="overview">
+  <div class="card">
+    <div class="card-head">
+      <h3>{{ 'adminFire.regionStats' | translate }}</h3>
+    </div>
+    <div class="stat">
+      <span>{{ 'adminFire.totalRegions' | translate }}</span>
+      <strong>{{ overview.regions.total }}</strong>
+    </div>
+    <div class="stat">
+      <span>{{ 'adminFire.activeRegions' | translate }}</span>
+      <strong>{{ overview.regions.active }}</strong>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>{{ 'adminFire.reportStats' | translate }}</h3>
+    </div>
+    <div class="stat">
+      <span>{{ 'adminFire.totalReports' | translate }}</span>
+      <strong>{{ overview.fire_reports.total }}</strong>
+    </div>
+    <div class="bars" *ngIf="statusBars.length > 0">
+      <div class="bar" *ngFor="let bar of statusBars">
+        <span>{{ bar.label }}</span>
+        <div class="bar-track">
+          <div class="bar-fill" [style.width.%]="bar.percent"></div>
+        </div>
+        <strong>{{ bar.value }}</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="card" *ngIf="overview">
+  <div class="card-head">
+    <h3>{{ 'adminFire.latestPredictions' | translate }}</h3>
+    <span class="pill">{{ overview.latest_predictions.data.length }}</span>
+  </div>
+  <div class="table">
+    <div class="table-row header">
+      <span>{{ 'regions.name' | translate }}</span>
+      <span>{{ 'regions.latestRisk' | translate }}</span>
+      <span>{{ 'regions.score' | translate }}</span>
+      <span>{{ 'regions.confidence' | translate }}</span>
+      <span>{{ 'regions.time' | translate }}</span>
+    </div>
+    <div class="table-row" *ngFor="let prediction of overview.latest_predictions.data">
+      <span>{{ prediction.region?.name }}</span>
+      <span [class]="'risk ' + prediction.risk_level">
+        {{ ('risk.' + prediction.risk_level) | translate }}
+      </span>
+      <span>{{ prediction.risk_score | number:'1.0-0' }}</span>
+      <span>{{ prediction.confidence | percent:'1.0-0' }}</span>
+      <span>{{ prediction.created_at | date:'short' }}</span>
+    </div>
+  </div>
+</section>

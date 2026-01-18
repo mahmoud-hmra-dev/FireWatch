@@ -1,4 +1,5 @@
 export type RiskLevel = 'low' | 'medium' | 'high';
+export type FireRiskLevel = 'low' | 'medium' | 'high' | 'extreme';
 export type AlertSource = 'manual' | 'auto';
 
 export interface User {
@@ -27,6 +28,51 @@ export interface Area {
   weather: AreaWeather;
   created_at?: string;
   updated_at?: string;
+}
+
+export interface Region {
+  id: number;
+  name: string;
+  type: string;
+  latitude: number;
+  longitude: number;
+  is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface FireRiskPrediction {
+  id: number;
+  risk_score: number;
+  risk_level: FireRiskLevel;
+  confidence: number;
+  explanation: string;
+  source: string;
+  created_at?: string;
+  region?: Region;
+}
+
+export interface FireReport {
+  id: number;
+  image_url: string | null;
+  lat: number;
+  lng: number;
+  status: string;
+  created_at?: string;
+  region?: Region;
+  user?: User;
+}
+
+export interface DashboardOverview {
+  regions: {
+    total: number;
+    active: number;
+  };
+  fire_reports: {
+    total: number;
+    by_status: Record<string, number>;
+  };
+  latest_predictions: ApiCollection<FireRiskPrediction>;
 }
 
 export interface Alert {

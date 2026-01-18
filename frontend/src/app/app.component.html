@@ -4,10 +4,17 @@
     <nav class="nav-links">
       <a routerLink="/">{{ 'nav.home' | translate }}</a>
       <a routerLink="/maps" *ngIf="isAuthenticated">{{ 'nav.maps' | translate }}</a>
+      <a routerLink="/regions" *ngIf="isAuthenticated">{{ 'nav.regions' | translate }}</a>
+      <a routerLink="/fire-reports/new" *ngIf="isAuthenticated">{{ 'nav.reportFire' | translate }}</a>
+      <a routerLink="/my-fire-reports" *ngIf="isUser">{{ 'nav.myReports' | translate }}</a>
       <a routerLink="/analysis" *ngIf="isAdmin">{{ 'nav.data' | translate }}</a>
       <a routerLink="/alerts" *ngIf="isAdmin">{{ 'nav.alerts' | translate }}</a>
       <a routerLink="/dashboard" *ngIf="isUser">{{ 'nav.dashboard' | translate }}</a>
       <a routerLink="/admin" *ngIf="isAdmin">{{ 'nav.admin' | translate }}</a>
+      <a routerLink="/admin/fire-dashboard" *ngIf="isAdmin">{{ 'nav.fireDashboard' | translate }}</a>
+      <a routerLink="/admin/regions" *ngIf="isAdmin">{{ 'nav.adminRegions' | translate }}</a>
+      <a routerLink="/admin/fire-risk-history" *ngIf="isAdmin">{{ 'nav.fireHistory' | translate }}</a>
+      <a routerLink="/admin/fire-reports" *ngIf="isAdmin">{{ 'nav.fireReports' | translate }}</a>
     </nav>
     <div class="nav-actions">
       <div class="lang-switcher">

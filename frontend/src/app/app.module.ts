@@ -13,6 +13,14 @@ import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard
 import { MapsComponent } from './pages/maps/maps.component';
 import { DataAnalysisComponent } from './pages/data-analysis/data-analysis.component';
 import { AlertsComponent } from './pages/alerts/alerts.component';
+import { RegionsComponent } from './pages/regions/regions.component';
+import { RegionDetailComponent } from './pages/region-detail/region-detail.component';
+import { FireReportFormComponent } from './pages/fire-report-form/fire-report-form.component';
+import { MyFireReportsComponent } from './pages/my-fire-reports/my-fire-reports.component';
+import { AdminFireDashboardComponent } from './pages/admin-fire-dashboard/admin-fire-dashboard.component';
+import { AdminRegionsComponent } from './pages/admin-regions/admin-regions.component';
+import { AdminFireRiskHistoryComponent } from './pages/admin-fire-risk-history/admin-fire-risk-history.component';
+import { AdminFireReportsComponent } from './pages/admin-fire-reports/admin-fire-reports.component';
 import { AuthInterceptor } from './core/auth.interceptor';
 import { TranslatePipe } from './core/translate.pipe';
 
@@ -27,6 +35,14 @@ import { TranslatePipe } from './core/translate.pipe';
     MapsComponent,
     DataAnalysisComponent,
     AlertsComponent,
+    RegionsComponent,
+    RegionDetailComponent,
+    FireReportFormComponent,
+    MyFireReportsComponent,
+    AdminFireDashboardComponent,
+    AdminRegionsComponent,
+    AdminFireRiskHistoryComponent,
+    AdminFireReportsComponent,
     TranslatePipe
   ],
   imports: [
