@@ -52,4 +52,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Alert::class);
     }
+
+    public function fireReports()
+    {
+        return $this->hasMany(FireReport::class);
+    }
 }

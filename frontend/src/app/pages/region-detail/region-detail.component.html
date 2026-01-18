@@ -1,0 +1,94 @@
+<section class="page-header">
+  <div>
+    <h2>{{ region?.name || ('regions.detailTitle' | translate) }}</h2>
+    <p>{{ 'regions.detailSubtitle' | translate }}</p>
+  </div>
+  <a class="btn ghost" routerLink="/regions">{{ 'regions.back' | translate }}</a>
+</section>
+
+<section *ngIf="errorKey" class="alert warning">{{ errorKey | translate }}</section>
+
+<section class="grid" *ngIf="!errorKey && region">
+  <div class="card">
+    <div class="card-head">
+      <h3>{{ 'regions.overview' | translate }}</h3>
+      <span class="pill" [class.active]="region.is_active">
+        {{ region.is_active ? ('regions.active' | translate) : ('regions.inactive' | translate) }}
+      </span>
+    </div>
+    <div class="meta">
+      <div>
+        <span class="label">{{ 'regions.type' | translate }}</span>
+        <strong>{{ region.type }}</strong>
+      </div>
+      <div>
+        <span class="label">{{ 'regions.latitude' | translate }}</span>
+        <strong>{{ region.latitude | number:'1.4-4' }}</strong>
+      </div>
+      <div>
+        <span class="label">{{ 'regions.longitude' | translate }}</span>
+        <strong>{{ region.longitude | number:'1.4-4' }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>{{ 'regions.latestRisk' | translate }}</h3>
+      <span [class]="riskClass(prediction?.risk_level)">
+        {{ ('risk.' + (prediction?.risk_level || 'unknown')) | translate }}
+      </span>
+    </div>
+    <p *ngIf="!prediction" class="hint">{{ 'regions.noPrediction' | translate }}</p>
+    <div *ngIf="prediction" class="prediction">
+      <div>
+        <span class="label">{{ 'regions.score' | translate }}</span>
+        <strong>{{ prediction.risk_score | number:'1.0-0' }}/100</strong>
+      </div>
+      <div>
+        <span class="label">{{ 'regions.confidence' | translate }}</span>
+        <strong>{{ prediction.confidence | percent:'1.0-0' }}</strong>
+      </div>
+      <div>
+        <span class="label">{{ 'regions.source' | translate }}</span>
+        <strong>{{ prediction.source }}</strong>
+      </div>
+      <div class="full">
+        <span class="label">{{ 'regions.explanation' | translate }}</span>
+        <p>{{ prediction.explanation }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="card" *ngIf="!errorKey && region">
+  <div class="card-head">
+    <h3>{{ 'regions.generate' | translate }}</h3>
+    <button class="btn primary" type="button" (click)="generatePrediction()" [disabled]="refreshing">
+      {{ refreshing ? ('regions.generating' | translate) : ('regions.generateAction' | translate) }}
+    </button>
+  </div>
+  <form [formGroup]="predictionForm" class="form-grid">
+    <label>
+      {{ 'regions.temperature' | translate }}
+      <input type="number" formControlName="temperature" />
+    </label>
+    <label>
+      {{ 'regions.humidity' | translate }}
+      <input type="number" formControlName="humidity" />
+    </label>
+    <label>
+      {{ 'regions.wind' | translate }}
+      <input type="number" formControlName="wind_speed" />
+    </label>
+    <label>
+      {{ 'regions.rainfall' | translate }}
+      <input type="number" formControlName="rainfall" />
+    </label>
+    <label>
+      {{ 'regions.vegetation' | translate }}
+      <input type="number" formControlName="vegetation_index" step="0.01" />
+    </label>
+  </form>
+  <p class="hint">{{ 'regions.generateHint' | translate }}</p>
+</section>

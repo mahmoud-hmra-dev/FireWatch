@@ -1,0 +1,25 @@
+<section class="page-header">
+  <div>
+    <h2>{{ 'adminFire.reportsTitle' | translate }}</h2>
+    <p>{{ 'adminFire.reportsSubtitle' | translate }}</p>
+  </div>
+</section>
+
+<section *ngIf="errorKey" class="alert warning">{{ errorKey | translate }}</section>
+
+<section class="table" *ngIf="!errorKey">
+  <div class="table-row header">
+    <span>{{ 'adminFire.reportRegion' | translate }}</span>
+    <span>{{ 'adminFire.reportUser' | translate }}</span>
+    <span>{{ 'reports.status' | translate }}</span>
+    <span>{{ 'reports.photo' | translate }}</span>
+    <span>{{ 'reports.time' | translate }}</span>
+  </div>
+  <div class="table-row" *ngFor="let report of reports">
+    <span>{{ report.region?.name }}</span>
+    <span>{{ report.user?.name || ('adminFire.unknownUser' | translate) }}</span>
+    <span class="pill">{{ report.status }}</span>
+    <img *ngIf="report.image_url" [src]="report.image_url" [alt]="'reports.photo' | translate" />
+    <span>{{ report.created_at | date:'short' }}</span>
+  </div>
+</section>

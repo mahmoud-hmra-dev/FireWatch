@@ -1,0 +1,72 @@
+<section class="page-header">
+  <div>
+    <h2>{{ 'adminRegions.title' | translate }}</h2>
+    <p>{{ 'adminRegions.subtitle' | translate }}</p>
+  </div>
+</section>
+
+<section class="grid">
+  <div class="card">
+    <div class="card-head">
+      <h3>{{ editingId ? ('adminRegions.editTitle' | translate) : ('adminRegions.createTitle' | translate) }}</h3>
+    </div>
+    <form [formGroup]="regionForm" (ngSubmit)="saveRegion()" class="form-grid">
+      <label>
+        {{ 'adminRegions.name' | translate }}
+        <input type="text" formControlName="name" />
+      </label>
+      <label>
+        {{ 'adminRegions.type' | translate }}
+        <input type="text" formControlName="type" />
+      </label>
+      <label>
+        {{ 'adminRegions.latitude' | translate }}
+        <input type="number" formControlName="latitude" />
+      </label>
+      <label>
+        {{ 'adminRegions.longitude' | translate }}
+        <input type="number" formControlName="longitude" />
+      </label>
+      <label class="toggle">
+        <input type="checkbox" formControlName="is_active" />
+        {{ 'adminRegions.active' | translate }}
+      </label>
+
+      <div class="btn-row">
+        <button class="btn primary" type="submit">
+          {{ editingId ? ('adminRegions.save' | translate) : ('adminRegions.create' | translate) }}
+        </button>
+        <button class="btn ghost" type="button" *ngIf="editingId" (click)="cancelEdit()">
+          {{ 'common.cancel' | translate }}
+        </button>
+      </div>
+      <p class="hint" *ngIf="statusKey">{{ statusKey | translate }}</p>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>{{ 'adminRegions.listTitle' | translate }}</h3>
+      <span class="pill">{{ regions.length }}</span>
+    </div>
+    <div class="list">
+      <div class="list-item" *ngFor="let region of regions">
+        <div>
+          <strong>{{ region.name }}</strong>
+          <p class="hint">{{ region.type }}</p>
+          <span class="pill" [class.active]="region.is_active">
+            {{ region.is_active ? ('adminRegions.active' | translate) : ('adminRegions.inactive' | translate) }}
+          </span>
+        </div>
+        <div class="actions">
+          <button class="btn ghost" type="button" (click)="editRegion(region)">
+            {{ 'actions.edit' | translate }}
+          </button>
+          <button class="btn ghost danger" type="button" (click)="deleteRegion(region)">
+            {{ 'actions.delete' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

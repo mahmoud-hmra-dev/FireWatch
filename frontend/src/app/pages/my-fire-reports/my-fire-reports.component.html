@@ -1,0 +1,24 @@
+<section class="page-header">
+  <div>
+    <h2>{{ 'reports.myTitle' | translate }}</h2>
+    <p>{{ 'reports.mySubtitle' | translate }}</p>
+  </div>
+  <a class="btn primary" routerLink="/fire-reports/new">{{ 'reports.newReport' | translate }}</a>
+</section>
+
+<section *ngIf="errorKey" class="alert warning">{{ errorKey | translate }}</section>
+
+<section class="list" *ngIf="!errorKey">
+  <div class="list-item" *ngFor="let report of reports">
+    <div class="details">
+      <strong>{{ report.region?.name || ('regions.unknown' | translate) }}</strong>
+      <p class="hint">{{ report.created_at | date:'short' }}</p>
+      <span class="pill">{{ report.status }}</span>
+    </div>
+    <img *ngIf="report.image_url" [src]="report.image_url" [alt]="'reports.photo' | translate" />
+  </div>
+</section>
+
+<section *ngIf="!errorKey && !loading && reports.length === 0" class="empty">
+  {{ 'reports.empty' | translate }}
+</section>

@@ -1,0 +1,36 @@
+<section class="page-header">
+  <div>
+    <h2>{{ 'adminFire.historyTitle' | translate }}</h2>
+    <p>{{ 'adminFire.historySubtitle' | translate }}</p>
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-head">
+    <label>
+      {{ 'adminFire.selectRegion' | translate }}
+      <select [value]="selectedRegionId" (change)="onRegionChange($any($event.target).value)">
+        <option *ngFor="let region of regions" [value]="region.id">{{ region.name }}</option>
+      </select>
+    </label>
+  </div>
+  <p class="hint" *ngIf="statusKey">{{ statusKey | translate }}</p>
+  <div class="table">
+    <div class="table-row header">
+      <span>{{ 'regions.latestRisk' | translate }}</span>
+      <span>{{ 'regions.score' | translate }}</span>
+      <span>{{ 'regions.confidence' | translate }}</span>
+      <span>{{ 'regions.source' | translate }}</span>
+      <span>{{ 'regions.time' | translate }}</span>
+    </div>
+    <div class="table-row" *ngFor="let prediction of predictions">
+      <span [class]="'risk ' + prediction.risk_level">
+        {{ ('risk.' + prediction.risk_level) | translate }}
+      </span>
+      <span>{{ prediction.risk_score | number:'1.0-0' }}</span>
+      <span>{{ prediction.confidence | percent:'1.0-0' }}</span>
+      <span>{{ prediction.source }}</span>
+      <span>{{ prediction.created_at | date:'short' }}</span>
+    </div>
+  </div>
+</section>

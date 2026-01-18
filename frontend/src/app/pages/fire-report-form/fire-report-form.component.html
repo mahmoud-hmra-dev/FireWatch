@@ -1,0 +1,52 @@
+<section class="page-header">
+  <div>
+    <h2>{{ 'reports.title' | translate }}</h2>
+    <p>{{ 'reports.subtitle' | translate }}</p>
+  </div>
+  <button class="btn ghost" type="button" (click)="detectLocation()">{{ 'reports.detect' | translate }}</button>
+</section>
+
+<section class="grid">
+  <div class="card">
+    <div class="card-head">
+      <h3>{{ 'reports.formTitle' | translate }}</h3>
+      <span class="pill">{{ 'reports.stepOne' | translate }}</span>
+    </div>
+    <form [formGroup]="reportForm" (ngSubmit)="submitReport()" class="form-grid">
+      <label>
+        {{ 'reports.region' | translate }}
+        <select formControlName="region_id">
+          <option value="">{{ 'reports.regionPlaceholder' | translate }}</option>
+          <option *ngFor="let region of regions" [value]="region.id">{{ region.name }}</option>
+        </select>
+      </label>
+      <label>
+        {{ 'reports.photo' | translate }}
+        <input type="file" (change)="onFileSelected($event)" />
+      </label>
+      <label>
+        {{ 'reports.latitude' | translate }}
+        <input type="text" formControlName="lat" />
+      </label>
+      <label>
+        {{ 'reports.longitude' | translate }}
+        <input type="text" formControlName="lng" />
+      </label>
+
+      <button class="btn primary" type="submit" [disabled]="submitting">
+        {{ submitting ? ('reports.submitting' | translate) : ('reports.submit' | translate) }}
+      </button>
+      <p class="hint" *ngIf="statusKey">{{ statusKey | translate }}</p>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>{{ 'reports.mapTitle' | translate }}</h3>
+      <span class="pill">{{ 'reports.mapHint' | translate }}</span>
+    </div>
+    <div class="map">
+      <div #mapCanvas class="map-canvas" [attr.aria-label]="'reports.mapTitle' | translate"></div>
+    </div>
+  </div>
+</section>
